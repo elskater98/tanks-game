@@ -26,8 +26,8 @@ class Map{
     int heigth;
     char *array2D; //https://stackoverflow.com/questions/936687/how-do-i-declare-a-2d-array-in-c-using-new
 
-    // constructor
-    Map(int _width, int _heigth){
+    // initMap
+    void create(int _width, int _heigth){
         width=_width;
         heigth=_heigth;
         array2D = new char [(int)width*(int)heigth];
@@ -44,14 +44,11 @@ class Map{
         printMap();
     }
 
-    // private class methods
-    private:
-
     void printMap(){
         cout << "Rows:"<<  width << " Columns:" << heigth << "\n\n";
         for(int i=0;i<width;i++){
             for(int j=0;j<heigth;j++){
-                cout << array2D[getPosition(j,i)]; //Horizontal Print
+                cout << array2D[getPosition(i,j)]; //Horizontal Print
             }
             cout << "\n";
         }
@@ -62,6 +59,8 @@ class Map{
         return x + y * width;
     }
 
+    // private class methods
+    private:
 
     void recursiveAlgorithm(int x, int y) {
         // https://stackoverflow.com/questions/38502/whats-a-good-algorithm-to-generate-a-maze
