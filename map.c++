@@ -1,6 +1,7 @@
 /*
 [Additional Information]
-    - Symbol ‘#’ represents a “wall” while spaces are for “corridor”.
+    - Symbol ‘#’ represents a “wall” 
+    - Symbol ' ' represents a “corridor”
 */
 
 // Libraries
@@ -8,7 +9,6 @@
 #include <cmath>
 #include <random>
 #include <algorithm>    // std::random_shuffle
-#include <string.h>
 
 // namespace
 using namespace std;
@@ -32,17 +32,19 @@ class Map{
         heigth=_heigth;
         array2D = new char [(int)width*(int)heigth];
 
-        // Init array2D with 0
+        // Init array2D with walls
         for(int i=0; i< _width*_heigth;i++){
             array2D[i] = '#';
         }
+
         recursiveAlgorithm(1,1);
         avoidEndPath();
+        initCharacters();
         symmetrization();
         printMap();
     }
 
-    // class methods
+    // private class methods
     private:
 
     void printMap(){
@@ -56,62 +58,59 @@ class Map{
     }
 
     int getPosition(int x, int y){
-        //Obtain position of single dimension (X*Y) pointer using two-dimensional axis (X,Y). 
+        // Obtain the position representated with single dimension (X*Y) using two-dimensional axis (X,Y).[1,2,3,4,5,6] = [[1,2],[3,4],[5,6]] 
         return x + y * width;
     }
 
 
     void recursiveAlgorithm(int x, int y) {
-        //https://stackoverflow.com/questions/38502/whats-a-good-algorithm-to-generate-a-maze
-        //https://hurna.io/academy/algorithms/maze_generator/recursive_division.html
+        // https://stackoverflow.com/questions/38502/whats-a-good-algorithm-to-generate-a-maze
+        // https://hurna.io/academy/algorithms/maze_generator/recursive_division.html
         
         int direction[4] ={UP,RIGTH,DOWN,LEFT};
 
-
-        // shuffle the desired direction
-        for (int i=0; i<4; ++i) {
-            int r = rand() & 3;
-            int temp = direction[r];
-            direction[r] = direction[i];
-            direction[i] = temp;
-        }
+        // shuffle: https://stackoverflow.com/questions/922256/c-array-shuffle
+        
+        std::random_shuffle(direction, direction + (sizeof(direction)/sizeof(direction[0])));
 
         array2D[getPosition(x,y)] = ' ';
 
         // Loop to attempt to visit that direction
+        
         for (int i=0 ; i<4 ; i++){
 
             //Initialize aux variables
             int dx=0, dy=0;
 
-
-            switch (direction[i])
-            {
+            switch (direction[i]){
                 case UP: dy = -1; break;
                 case RIGTH: dx = 1; break;
                 case DOWN: dy = 1; break;
                 case LEFT: dx = -1; break;
             }
 
-            // Aux variables to offset
-            int x2 = x + (dx<<1);
-            int y2 = y + (dy<<1);
+            generatePath(x + dx*2,y + dy*2,dx,dy);
 
-            if (isBound(x2, y2)) {
-                if (array2D[getPosition(x2, y2)] == '#') {
-                    array2D[getPosition(x2-dx, y2-dy)] = ' ';
-
-                    // repeat recursively
-                    recursiveAlgorithm(x2, y2);
-                }
-            }
-            
         }
     }
 
     int isBound (int x, int y) {
-        return !((x < 0 || x >= width) || (y < 0 || y >= heigth));
+        return !(x < 0 || y < 0 || x >= width  || y >= heigth);
     }
+
+    void generatePath(int x,int y, int dx, int dy){
+
+        if (isBound(x, y) && array2D[getPosition(x, y)] == '#') {
+
+            array2D[getPosition(x-dx, y-dy)] = ' ';
+
+            // Restart process of generate path
+            recursiveAlgorithm(x, y);
+                
+        }
+    }
+
+
 
     void avoidEndPath() {
         
@@ -132,7 +131,40 @@ class Map{
         }
     }
 
+    // Init Characters
+    void initCharacters (){
+        int ycenter = floor(heigth/2);
+        int xcenter = floor(width/2);
+
+        for (int i = (xcenter-5) ; i < xcenter+5; i++) {
+            for (int j = (ycenter-3) ; j <= (ycenter+2); j++) {
+                
+                if ((i == (xcenter-4) && j != (ycenter-3) && j != (ycenter+2)) || (j == (ycenter+1) && i != (xcenter-5))){
+                    array2D[getPosition(i, j)] = '1';
+                } 
+                
+                else if (i == (xcenter-5) || j == (ycenter-3)){
+                        array2D[getPosition(i, j)] = ' ';
+                }
+
+                else if ((i == (xcenter-3) && j == (ycenter-2)) || (i == (xcenter-2) && j == (ycenter-2))){
+                    array2D[getPosition(i, j)] = '#';
+                } 
+
+                else if (j == (ycenter) || j == (ycenter-1) || j== (ycenter+1)){
+                    array2D[getPosition(i, j)] = '0';
+                } 
+
+                else{
+                    array2D[getPosition(i, j)] = ' ';
+                }
+                    
+            }
+        }
+    }
+
     void symmetrization() {
+        // https://www.faceprep.in/c/program-to-find-all-symmetric-pairs-in-an-array/
 
         int blank = ceil(width / 2);
         int draw = floor(width / 2);
