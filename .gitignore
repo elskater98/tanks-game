@@ -31,3 +31,11 @@
 *.out
 *.app
 .vscode/
+
+# Docker ubuntu
+.cache/
+.config/
+.local/
+.thumbnails/
+.bash_history
+.sudo_as_admin_successful
