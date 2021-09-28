@@ -35,9 +35,8 @@ class Map{
         initWalls();
         recursiveAlgorithm(1,1);
         avoidEndPath();
-        setGhostRoom();
+        setRoom();
         symmetrization();
-        //printMap();
     }
 
     void print(){
@@ -132,7 +131,7 @@ class Map{
         }
     }
 
-    void setGhostRoom () {
+    void setRoom () {
         int ycenter = floor(height/2);
         int xcenter = floor(width/2);
 
@@ -142,17 +141,6 @@ class Map{
                 if ((i == (xcenter-4) && j != (ycenter-3) && j != (ycenter+2)) || (j == (ycenter+1) && i != (xcenter-5)) || (i == (xcenter-3) && j == (ycenter-2)) || (i == (xcenter-2) && j == (ycenter-2))) {
                     array2D[getPosition(i, j)] = WALL_SYMBOL;
                 }
-                /*else if (i == (xcenter-5) || j == (ycenter-3) || j == (ycenter) || j == (ycenter-1) || j== (ycenter+1)){
-                    array2D[getPosition(i, j)] = CORRIDOR_SYMBOL;
-                }*/
-
-                /*else if ((i == (xcenter-3) && j == (ycenter-2)) || (i == (xcenter-2) && j == (ycenter-2))) {
-                    array2D[getPosition(i, j)] = WALL_SYMBOL;
-                }*/ 
-
-                /*else if (j == (ycenter) || j == (ycenter-1) || j== (ycenter+1)) {
-                    array2D[getPosition(i, j)] = CORRIDOR_SYMBOL;
-                }*/
                 else{
                     array2D[getPosition(i, j)] = CORRIDOR_SYMBOL;
                 }
