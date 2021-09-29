@@ -1,6 +1,9 @@
 # PACKAGE 1
 ## Introduction
-In this package, we have the aim to generate a random map using c++ and visualize the map created with OpenGL.
+
+This package is focused on introducing us to the opengl libraries, and how to display basic figures via its methods.
+
+The idea starts from creating an algorithm to generate a random map for a pacman game, using c++. In this way, from the data-structure that models the map, we will be able to perform its corresponding visualitzation through opengl libraries.
 
 ## Generate Random Map
 First of all, we search different algorithms to generate random maps and we found different techniques to generate a random map with at least one path. For example Binary Tree, Depth First Search, Kruskal's, Prim's, recursive division and sidewinder. All of them, have in common are search algorithms. 
