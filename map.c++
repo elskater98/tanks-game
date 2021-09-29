@@ -2,6 +2,8 @@
 [Additional Information]
     - Symbol ‘#’ represents a “wall” 
     - Symbol ' ' represents a “corridor”
+
+    - link of interest: https://pragprog.com/titles/jbmaze/mazes-for-programmers/
 */
 
 // Libraries
@@ -24,7 +26,7 @@ class Map{
     // class properties
     int width;
     int height;
-    char *array2D; //https://stackoverflow.com/questions/936687/how-do-i-declare-a-2d-array-in-c-using-new
+    char *array2D; // https://stackoverflow.com/questions/936687/how-do-i-declare-a-2d-array-in-c-using-new
 
     // initMap
     void create(int _width, int _height){
@@ -75,6 +77,7 @@ class Map{
     void recursiveAlgorithm(int x, int y) {
         // https://stackoverflow.com/questions/38502/whats-a-good-algorithm-to-generate-a-maze
         // https://hurna.io/academy/algorithms/maze_generator/recursive_division.html
+        // http://weblog.jamisbuck.org/2010/12/27/maze-generation-recursive-backtracking
         
         int direction[4] = {UP,RIGHT,DOWN,LEFT};
 
