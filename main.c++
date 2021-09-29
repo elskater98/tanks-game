@@ -62,7 +62,7 @@ void display() {
 
 void askDimensions() {
     // Ask map dimensions
-    cout << "[Instructions]: Width must be an ODD and geather than height; Height mus be EVEN number.\n";
+    cout << "[Instructions]: Width must be an ODD and geather than height; Height must be EVEN number.\n";
     
     cout << "Enter width: ";
     cin >> input_width;
