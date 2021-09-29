@@ -33,13 +33,13 @@ In this way, we already got a Map object with its properties and methods to work
 
 ## .create()
 
-Set to initialize and generate the map.
+Set to initialize and generate the map, all by following the next steps.
 
-### 1 .initWalls()
+- ### 1 .initWalls()
 
 Just to fullfill the array.
 
-### 2 .recursiveAlgorithm(int x, int y)
+- ### 2 .recursiveAlgorithm(int x, int y)
 
 When the recursive backtracking is applied.
 
@@ -47,23 +47,23 @@ This algorithm uses a random shuffle of the directions {UP, DOWN, LEFT, RIGHT} a
 
 Also, before stepforward we check the boundaries of the map, so thus, be able to recalculate the next point to set a new corridor.
 
-### 3 .avoidEndPath()
+- ### 3 .avoidEndPath()
 
 After generating the map with only one single path we decide to create a method to avoid end paths. 
 
 This method loops all the maps in X and Y, to set corridors. Also, we set the location of the second character of this game in the centre of the map.
 
-### 4 .setRoom()
+- ### 4 .setRoom()
 
 Just to calculate and establish the commonly known room of ghost in pacman games.
 
-### 5 .simetrization()
+- ### 5 .simetrization()
 
 Finally, we decided to use symmetrization to avoid path problems and get a more aesthetic maze. Simply by copying one side into the other.
 
 ## Display Map
 
-This part was the main program, it use the class called before to generate the map and visualize it.
+This part was the main program, it uses the class called before to generate the map and visualize it.
 
 First of all, we create a map using the width and height passed by the user. After that, we create the map that we will visualize.
 
