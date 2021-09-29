@@ -6,9 +6,19 @@ This package is focused on introducing us to the opengl libraries, and how to di
 The idea starts from creating an algorithm to generate a random map for a pacman game, using c++. In this way, from the data-structure that models the map, we will be able to perform its corresponding visualitzation through opengl libraries.
 
 ## Generate Random Map
-First of all, we search different algorithms to generate random maps and we found different techniques to generate a random map with at least one path. For example Binary Tree, Depth First Search, Kruskal's, Prim's, recursive division and sidewinder. All of them, have in common are search algorithms. 
 
-Finally, we decide to use recursive division to generate the single path. It is because we found a good way to develop this piece of code comparing the difficulties of others.
+We searched over the internet for algorithms to generate random maps, and we got different techniques with at least one path based on the typical graph-search algorithms such as Binary Tree, Depth/Breadth First Search, Kruska'ls, Prim's, recursive backtracking, recursive division and sidewinder.
+
+Overall, we found the recursive backtracking is straighforward and commonly used for maze generation. Thus, we finally got a good way to develop this piece of code comparing among the difficulties of others.
+
+But it's true, you’ll need enough memory to store the entire maze in memory, as it requires stack space again proportional to the size of the maze. Meaning, for very large mazes it can be fairly inefficient. But for most mazes, it works a charm. The ones we expect to perform.
+
+Basically, this algorithm is based on the single path premise, starting at a specific point and randomly choose the path to follow considering non-visited cells, and ending, when the process has backed all the way up to the starting point.
+
+In this way, we assure visiting all cells, and a single path full-connected graph map.
+
+For more information, check the following [link](http://weblog.jamisbuck.org/2010/12/27/maze-generation-recursive-backtracking).
+
 
 After explaining the main reason why we choose the Recursive Division algorithm, we explain the code developed in this first package.
 
