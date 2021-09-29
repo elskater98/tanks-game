@@ -21,7 +21,7 @@ For more information about the backtracking technique, check the following [link
 
 ## Code Structure
 
-After explaining the main reason why we choose the Recursive Division algorithm, we will introduce you the code developed in this first package.
+After explaining the main reason why we choose the Recursive Backtracking algorithm, we will introduce you the code developed in this first package.
 
 First of all, we create a class called *Map*, which mainly contains an empty constructor, a *create()* method to initialize and generate the map, and finally, a *std_out print()* method to view the map on the prompt of the command line.
 
@@ -61,12 +61,15 @@ Just to calculate and establish the commonly known room of ghost in pacman games
 
 Finally, we decided to use symmetrization to avoid path problems and get a more aesthetic maze. Simply by copying one side into the other.
 
-## Display Map
 
-This part was the main program, it uses the class called before to generate the map and visualize it.
+## Main program
 
-First of all, we create a map using the width and height passed by the user. After that, we create the map that we will visualize.
+Regarding the main program, it uses the Map class to generate the map and visualize it via opengl libraries.
 
-To visualize the map we init the GLUT library with the position and size of the window. Also, we loop the map for each axis and set the square with the corresponding colour.
+First of all, the map is created using the width and height passed by the user, and after that, the map is visualized thanks to the GLUT library procedures.
+
+To visualize the map we init the GLUT library with the position and size of the window. Also, we perform a loop through the map for each axis and set for each cell (wall or corridor) the corresponding GL_QUAD (square). Color blue for walls, and black for corridors. Not too complicated :P
+
+Well, don't forget to swap the buffers!!
 
 
