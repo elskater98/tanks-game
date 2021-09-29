@@ -68,8 +68,8 @@ Regarding the main program, it uses the Map class to generate the map and visual
 
 First of all, the map is created using the width and height passed by the user, and after that, the map is visualized thanks to the GLUT library procedures.
 
-To visualize the map we init the GLUT library with the position and size of the window. Also, we perform a loop through the map for each axis and set for each cell (wall or corridor) the corresponding GL_QUAD (square). Color blue for walls, and black for corridors. Not too complicated :P
+To visualize the map we init the GLUT library with the position and size of the window. Also, we perform a loop through the map for each axis and set for each cell (wall or corridor) the corresponding GL_QUAD (square). 
+
+Color blue for walls, and black for corridors. Not too complicated :P
 
 Well, don't forget to swap the buffers!!
-
-
