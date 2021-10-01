@@ -16,8 +16,8 @@ int keyflag=0;
 int input_width = 25;
 int input_height = 25;
 
-void displayWall(int x, int y) {
-    glColor3f(0.0,0.0,1);
+void displaySquare(int R, int G, int B, int x, int y){
+    glColor3f(R,G,B);
     glBegin(GL_QUADS);
     glVertex2i(x * (cell_width), y * (cell_width)); // top left
     glVertex2i(x * (cell_width) + cell_width, y * (cell_width)); // top right 
@@ -26,15 +26,21 @@ void displayWall(int x, int y) {
     glEnd();
 }
 
+void displayWall(int x, int y) {
+    displaySquare(0.0,0,1,x,y);
+}
+
 void displayCorridor(int x, int y) {
-    glColor3f(0.0,0.0,0.0);
-    glBegin(GL_QUADS);
-    glVertex2i(x * (cell_width), y * (cell_width)); // top left
-    glVertex2i(x * (cell_width) + cell_width, y * (cell_width)); // top right 
-    glVertex2i(x * (cell_width) + cell_width, y * (cell_width) + cell_width); // bottom right
-    glVertex2i(x * (cell_width), y * (cell_width) + cell_width); // bottom left
-    glEnd();
-    
+    displaySquare(0.0,0.0,0.0,x,y);
+}
+
+void displayMainCharacter(int x,int y){
+    displaySquare(0,100,0,x,y);
+}
+
+void displayEnemy(int x, int y){
+    displaySquare(139,0,0,x,y);
+
 }
 
 void showMap(){        
@@ -46,6 +52,13 @@ void showMap(){
 			else if (map.array2D[map.getPosition(x,y)] == map.getCorridorSymbol()) {
                 displayCorridor(x, y);
             }
+
+            if(x==1 && y==map.height-2)
+            displayMainCharacter(x,y);
+
+            if(x==map.width-2 && y==1)
+            displayEnemy(x,y);
+
 		}
 	}
 }
