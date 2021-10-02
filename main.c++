@@ -69,6 +69,10 @@ void showMap(){
 	}
 }
 
+bool isWall(int x, int y){
+    return map.array2D[map.getPosition(x,y)] == map.getWallSymbol();
+}
+
 void display() {
 
  	glClearColor(0.0,0.0,0.0,0.0);
@@ -96,26 +100,39 @@ void askDimensions() {
 
 void keyboard(unsigned char c,int x,int y)
 {
+    
     switch (c){
-        case 'w':
-            player.init_movement(player.getX(),player.getY()+1,player_speed);
-            break;
-        case 's':
-            player.init_movement(player.getX(),player.getY()-1,player_speed);
-            break;
-        case 'a':
-            player.init_movement(player.getX()-1,player.getY(),player_speed);
-            break;
-        case 'd':
-            player.init_movement(player.getX()+1,player.getY(),player_speed);
-            break;
-        default:
-            break;
-    }
-
-
+            case 'w':
+                if (!isWall(player.getX(),player.getY()+1)){
+                    player.init_movement(player.getX(),player.getY()+1,player_speed);
+                }
+                
+                break;
+            case 's':
+                if (!isWall(player.getX(),player.getY()-1)){
+                    player.init_movement(player.getX(),player.getY()-1,player_speed);
+                }
+                
+                break;
+            case 'a':
+                if (!isWall(player.getX()-1,player.getY())){
+                    player.init_movement(player.getX()-1,player.getY(),player_speed);
+                }
+                
+                break;
+            case 'd':
+                if (!isWall(player.getX()+1,player.getY())){
+                    player.init_movement(player.getX()+1,player.getY(),player_speed);
+                }
+                
+                break;
+            default:
+                break;
+        }
     glutPostRedisplay();
 };
+
+
 
 void idle(){
     long t;
