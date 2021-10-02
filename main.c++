@@ -12,12 +12,15 @@ using namespace std;
 
 // Global variables
 Map map = Map();
-Character character = Character();
+Character player = Character();
+Character enemy = Character();
 
 int cell_width = 10;
 int keyflag=0;
-int input_width = 25;
-int input_height = 25;
+int input_width;
+int input_height;
+long last_t=0;
+int player_speed = 10;
 
 void displaySquare(int R, int G, int B, int x, int y){
     glColor3f(R,G,B);
@@ -37,11 +40,11 @@ void displayCorridor(int x, int y) {
     displaySquare(0.0,0.0,0.0,x,y);
 }
 
-void displayMainCharacter(int x,int y){
+void displayInitialPlayer(int x,int y){
     displaySquare(0,100,0,x,y);
 }
 
-void displayEnemy(int x, int y){
+void displayInitialEnemy(int x, int y){
     displaySquare(139,0,0,x,y);
 
 }
@@ -57,10 +60,10 @@ void showMap(){
             }
 
             if(x==1 && y==map.height-2)
-            displayMainCharacter(x,y);
+            displayInitialPlayer(x,y);
 
             if(x==map.width-2 && y==1)
-            displayEnemy(x,y);
+            displayInitialEnemy(x,y);
 
 		}
 	}
@@ -72,7 +75,8 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	showMap();
-    character.display();
+    player.display();
+    enemy.display();
 
 	glutSwapBuffers();
 }
@@ -90,6 +94,45 @@ void askDimensions() {
     cout << "[INFO] Generating " << input_width << "x" << input_height;
 }
 
+void keyboard(unsigned char c,int x,int y)
+{
+    switch (c){
+        case 'w':
+            player.init_movement(player.getX(),player.getY()+1,player_speed);
+            break;
+        case 's':
+            player.init_movement(player.getX(),player.getY()-1,player_speed);
+            break;
+        case 'a':
+            player.init_movement(player.getX()-1,player.getY(),player_speed);
+            break;
+        case 'd':
+            player.init_movement(player.getX()+1,player.getY(),player_speed);
+            break;
+        default:
+            break;
+    }
+
+
+    glutPostRedisplay();
+};
+
+void idle(){
+    long t;
+
+    t=glutGet(GLUT_ELAPSED_TIME); 
+
+    if(last_t==0){
+        last_t=t;
+    }
+    else{
+        player.integrate(t-last_t);
+        last_t=t;
+    }
+
+    glutPostRedisplay();
+}
+
 int main(int argc, char *argv[]) {
 
     askDimensions();
@@ -99,7 +142,10 @@ int main(int argc, char *argv[]) {
     map.print();
 
     // Create Player
-    character.initPlayer(1, map.height - 2 );
+    player.init(0,1, map.height - 2 );
+
+    // Create Enemy
+    enemy.init(1,map.width-2,1);
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -110,6 +156,8 @@ int main(int argc, char *argv[]) {
     glutDisplayFunc(display);
     glMatrixMode(GL_PROJECTION);
     gluOrtho2D(0,(cell_width * map.width)-1,0,(cell_width * map.height)-1);
+    glutKeyboardFunc(keyboard);
+    glutIdleFunc(idle);
 
     glutMainLoop();
 
