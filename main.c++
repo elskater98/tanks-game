@@ -5,12 +5,15 @@
 // Own Libraries
 
 #include "map.c++"
+#include "character.c++"
 
 // namespace
 using namespace std;
 
 // Global variables
 Map map = Map();
+Character character = Character();
+
 int cell_width = 10;
 int keyflag=0;
 int input_width = 25;
@@ -69,6 +72,7 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	showMap();
+    character.display();
 
 	glutSwapBuffers();
 }
@@ -93,6 +97,9 @@ int main(int argc, char *argv[]) {
     srand(time(NULL)); // Set Seed to geneate random numbers
     map.create(input_width, input_height); // create map
     map.print();
+
+    // Create Player
+    character.initPlayer(1, map.height - 2 );
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);

@@ -37,7 +37,6 @@ class Map{
         initWalls();
         recursiveAlgorithm(1,1);
         avoidEndPath();
-        setRoom();
         symmetrization();
     }
 
@@ -130,24 +129,6 @@ class Map{
                 for (int y = 1; y < height-1 ; y++)
                     if (isBound(x, y))
                         array2D[getPosition(x,y)] = CORRIDOR_SYMBOL;
-            }
-        }
-    }
-
-    void setRoom () {
-        int ycenter = floor(height/2);
-        int xcenter = floor(width/2);
-
-        for (int i = (xcenter-5) ; i < xcenter+5; i++) {
-            for (int j = (ycenter-3) ; j <= (ycenter+2); j++) {
-                
-                if ((i == (xcenter-4) && j != (ycenter-3) && j != (ycenter+2)) || (j == (ycenter+1) && i != (xcenter-5)) || (i == (xcenter-3) && j == (ycenter-2)) || (i == (xcenter-2) && j == (ycenter-2))) {
-                    array2D[getPosition(i, j)] = WALL_SYMBOL;
-                }
-                else{
-                    array2D[getPosition(i, j)] = CORRIDOR_SYMBOL;
-                }
-                    
             }
         }
     }
