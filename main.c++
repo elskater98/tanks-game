@@ -3,6 +3,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <thread>
+#include <math.h>
 // Own Libraries
 
 #include "map.c++"
@@ -171,14 +172,22 @@ void idle(){
 }
 
 void moveEnemy(){
-    int direction[4] = {UP,RIGHT,DOWN,LEFT};
-    int weights[4] = {0.4,0.1,0.1,0.4};
+    int direction[3] = {UP,RIGHT,LEFT};
+    //float weights[4] = {0.4,0.1,0.1,0.4};
+
 
     while(true){ // Player Initial Position
         std::random_shuffle(direction, direction + (sizeof(direction)/sizeof(direction[0])));
+        /*float order[4];
+
         for (int i = 0; i < 4; i++){
+            order[i] = pow(rand() % 10, 1 / weights[i]);
+        }
+
+        sort(weights, weights + sizeof(weights) / sizeof(weights[0]));*/
+
+        for (int i = 0; i < 3; i++){
                 
-            //int val = (float) rand()/RAND_MAX;
             int aux = 0;
             
             switch (direction[i]){
@@ -209,7 +218,7 @@ void moveEnemy(){
                     break;
             }
             
-            usleep(500000);
+            usleep(200000);
             // END GAME https://www.youtube.com/watch?v=dE1P4zDhhqw
             if((enemy.getX()== 1 && enemy.getY() == map.height-2) || (player.getX()==map.width-2 && player.getY()==1)){
                 exit(0);
