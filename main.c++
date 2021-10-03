@@ -1,7 +1,8 @@
 // Libraries
 #include <GL/glut.h>
 #include <iostream>
-
+#include <unistd.h>
+#include <thread>
 // Own Libraries
 
 #include "map.c++"
@@ -9,6 +10,12 @@
 
 // namespace
 using namespace std;
+
+// Defined Variables
+#define UP 0
+#define RIGHT 1
+#define DOWN 2
+#define LEFT 3
 
 // Global variables
 Map map = Map();
@@ -21,6 +28,7 @@ int input_width;
 int input_height;
 long last_t=0;
 int player_speed = 10;
+int enemy_speed = 10;
 
 void displaySquare(int R, int G, int B, int x, int y){
     glColor3f(R,G,B);
@@ -59,9 +67,11 @@ void showMap(){
                 displayCorridor(x, y);
             }
 
+            // Player
             if(x==1 && y==map.height-2)
             displayInitialPlayer(x,y);
 
+            // Enemy
             if(x==map.width-2 && y==1)
             displayInitialEnemy(x,y);
 
@@ -73,9 +83,14 @@ bool isWall(int x, int y){
     return map.array2D[map.getPosition(x,y)] == map.getWallSymbol();
 }
 
-bool charactersCollision(int x, int y){
+bool charactersEnemyCollision(int x, int y){
     return x == enemy.getX() && y == enemy.getY();
 }
+
+bool charactersPlayerCollision(int x, int y){
+    return x == player.getX() && y == player.getY();
+}
+
 
 void display() {
 
@@ -107,25 +122,25 @@ void keyboard(unsigned char c,int x,int y)
     
     switch (c){
             case 'w':
-                if (!isWall(player.getX(),player.getY()+1) && !charactersCollision(player.getX(),player.getY()+1)){
+                if (!isWall(player.getX(),player.getY()+1) && !charactersEnemyCollision(player.getX(),player.getY()+1)){
                     player.init_movement(player.getX(),player.getY()+1,player_speed);
                 }
                 
                 break;
             case 's':
-                if (!isWall(player.getX(),player.getY()-1) && !charactersCollision(player.getX(),player.getY()-1)){
+                if (!isWall(player.getX(),player.getY()-1) && !charactersEnemyCollision(player.getX(),player.getY()-1)){
                     player.init_movement(player.getX(),player.getY()-1,player_speed);
                 }
                 
                 break;
             case 'a':
-                if (!isWall(player.getX()-1,player.getY()) && !charactersCollision(player.getX()-1,player.getY())){
+                if (!isWall(player.getX()-1,player.getY()) && !charactersEnemyCollision(player.getX()-1,player.getY())){
                     player.init_movement(player.getX()-1,player.getY(),player_speed);
                 }
                 
                 break;
             case 'd':
-                if (!isWall(player.getX()+1,player.getY()) && !charactersCollision(player.getX()+1,player.getY())){
+                if (!isWall(player.getX()+1,player.getY()) && !charactersEnemyCollision(player.getX()+1,player.getY())){
                     player.init_movement(player.getX()+1,player.getY(),player_speed);
                 }
                 
@@ -148,10 +163,59 @@ void idle(){
     }
     else{
         player.integrate(t-last_t);
+        enemy.integrate(t-last_t);
         last_t=t;
     }
 
     glutPostRedisplay();
+}
+
+void moveEnemy(){
+    int direction[4] = {UP,RIGHT,DOWN,LEFT};
+    int weights[4] = {0.4,0.1,0.1,0.4};
+
+    while(true){ // Player Initial Position
+        std::random_shuffle(direction, direction + (sizeof(direction)/sizeof(direction[0])));
+        for (int i = 0; i < 4; i++){
+                
+            //int val = (float) rand()/RAND_MAX;
+            int aux = 0;
+            
+            switch (direction[i]){
+                case UP:
+                    if (!isWall(enemy.getX(),enemy.getY()+1) && !charactersPlayerCollision(enemy.getX(),enemy.getY()+1)){
+                        enemy.init_movement(enemy.getX(),enemy.getY()+1,enemy_speed);
+                    }
+                    
+                    break;
+                case DOWN:
+                    if (!isWall(enemy.getX(),enemy.getY()-1) && !charactersPlayerCollision(enemy.getX(),enemy.getY()-1)){
+                        enemy.init_movement(enemy.getX(),enemy.getY()-1,enemy_speed);
+                    }
+                    
+                    break;
+                case LEFT:
+                    if (!isWall(enemy.getX()-1,enemy.getY()) && !charactersPlayerCollision(enemy.getX()-1,enemy.getY())){
+                        enemy.init_movement(enemy.getX()-1,enemy.getY(),enemy_speed);
+                    }
+                    
+                    break;
+                case RIGHT:
+                    if (!isWall(enemy.getX()+1,enemy.getY()) && !charactersPlayerCollision(enemy.getX()+1,enemy.getY())){
+                        enemy.init_movement(enemy.getX()+1,enemy.getY(),enemy_speed);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            
+            usleep(500000);
+            // END GAME https://www.youtube.com/watch?v=dE1P4zDhhqw
+            if((enemy.getX()== 1 && enemy.getY() == map.height-2) || (player.getX()==map.width-2 && player.getY()==1)){
+                exit(0);
+            }
+        }
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -167,6 +231,7 @@ int main(int argc, char *argv[]) {
 
     // Create Enemy
     enemy.init(1,map.width-2,1);
+    thread t1(moveEnemy);
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);

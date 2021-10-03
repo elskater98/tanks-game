@@ -53,7 +53,7 @@ class Character{
             if(id==0){
                 glColor3f(255, 0, 240);
             }else{
-                glColor3f(255, 0, 240);
+                glColor3f(255, 255, 0);
             }
             
             glBegin(GL_QUADS);
