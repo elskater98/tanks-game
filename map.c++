@@ -227,35 +227,4 @@ class Map {
                 }
             }
         }
-
-        /*void avoidEndPath() {
-            for (int y = 1 ; y < height-1; y++) {
-                if (y%3==0) {
-                    for (int x= 1 ; x < width; x++)
-                        if (isBound(x, y))
-                        array2D[getPosition(x,y)] = CORRIDOR_SYMBOL;
-                }
-            }
-            
-            for (int x = 2; x < width-2; x++) {
-                if (x%3==0) {
-                    for (int y = 1; y < height-1 ; y++)
-                        if (isBound(x, y))
-                            array2D[getPosition(x,y)] = CORRIDOR_SYMBOL;
-                }
-            }
-        }*7
-
-        /*void symmetrization() {
-            // https://www.faceprep.in/c/program-to-find-all-symmetric-pairs-in-an-array/
-
-            int blank = ceil(width / 2);
-            int draw = floor(width / 2);
-
-            for (int i = 0; i < height; i++) {
-                for (int j = 0; j < draw; j++) {
-                    array2D[getPosition((blank+j), i)] = array2D[getPosition((draw-1-j), i)];
-                }
-            }
-        }*/
 };
