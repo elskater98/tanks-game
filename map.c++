@@ -10,7 +10,8 @@
 #include <iostream>
 #include <cmath>
 #include <random>
-#include <algorithm>    // std::random_shuffle
+#include <algorithm> // std::random_shuffle
+#include <vector>
 
 // namespace
 using namespace std;
@@ -29,18 +30,19 @@ class Map{
     char *array2D; // https://stackoverflow.com/questions/936687/how-do-i-declare-a-2d-array-in-c-using-new
 
     // initMap
-    void create(int _width, int _height){
+    void create(int _width, int _height) {
         width=_width;
         height=_height;
         array2D = new char [(int)width*(int)height];
 
         initWalls();
         recursiveAlgorithm(1,1);
-        avoidEndPath();
-        symmetrization();
+        removeMazeWalls();
+        //avoidEndPath();
+        //symmetrization();
     }
 
-    void print(){
+    void print() {
         cout << "Rows:"<<  width << " Columns:" << height << "\n\n";
         for(int i=0; i<width; i++){
             for(int j=0; j<height; j++){
@@ -50,7 +52,7 @@ class Map{
         }
     }
 
-    int getPosition(int x, int y){
+    int getPosition(int x, int y) {
         // Obtain the position representated with single dimension (X*Y) using two-dimensional axis (X,Y).[1,2,3,4,5,6] = [[1,2],[3,4],[5,6]] 
         return x + y * width;
     }
@@ -91,7 +93,7 @@ class Map{
             //Initialize aux variables
             int dx=0, dy=0;
 
-            switch (direction[i]){
+            switch (direction[i]) {
                 case UP: dy = -1; break;
                 case RIGHT: dx = 1; break;
                 case DOWN: dy = 1; break;
@@ -99,7 +101,6 @@ class Map{
             }
 
             generatePath(x + dx*2,y + dy*2,dx,dy);
-
         }
     }
 
@@ -107,7 +108,7 @@ class Map{
         return !(x < 0 || y < 0 || x >= width  || y >= height);
     }
 
-    void generatePath(int x,int y, int dx, int dy) {
+    void generatePath(int x, int y, int dx, int dy) {
         if (isBound(x, y) && array2D[getPosition(x, y)] == WALL_SYMBOL) {
             array2D[getPosition(x-dx, y-dy)] = CORRIDOR_SYMBOL;
             recursiveAlgorithm(x, y); // restart
@@ -129,6 +130,121 @@ class Map{
                 for (int y = 1; y < height-1 ; y++)
                     if (isBound(x, y))
                         array2D[getPosition(x,y)] = CORRIDOR_SYMBOL;
+            }
+        }
+    }
+
+    bool removeWall(int x, int y) {
+        // remove wall if possible.
+        bool evenRow = ((y % 2) == 0);
+        bool evenIndex = ((x % 2) == 0);
+
+        // check
+        if(array2D[getPosition(x, y)] != WALL_SYMBOL) {
+            return false;
+        }
+
+        if (!evenRow && evenIndex) {
+            // Uneven row and even column
+
+            bool hasTop = (y - 2 > 0) && (array2D[getPosition(x, y-2)] == WALL_SYMBOL);
+            bool hasBottom = (y + 2 > 0) && (array2D[getPosition(x, y+2)] == WALL_SYMBOL);
+
+            if (hasTop && hasBottom) {
+                array2D[getPosition(x, y)] = CORRIDOR_SYMBOL;
+                return true;
+            } else if (!hasTop && hasBottom) {
+                bool left = (array2D[getPosition(x-1, y-1)] == WALL_SYMBOL);
+                bool right = (array2D[getPosition(x+1, y-1)] == WALL_SYMBOL);
+                if (left || right) {
+                    array2D[getPosition(x, y)] = CORRIDOR_SYMBOL;
+                    return true;
+                }
+            } else if (!hasBottom && hasTop) {
+                bool left = (array2D[getPosition(x-1, y+1)] == WALL_SYMBOL);
+                bool right = (array2D[getPosition(x+1, y+1)] == WALL_SYMBOL);
+                if (left || right) {
+                    array2D[getPosition(x, y)] = CORRIDOR_SYMBOL;
+                    return true;
+                }
+            }
+        } else if (evenRow && !evenIndex) {
+            // Even row and uneven column
+            bool hasLeft = (array2D[getPosition(x-2, y)] == WALL_SYMBOL);
+            bool hasRight = (array2D[getPosition(x+2, y)] == WALL_SYMBOL);
+
+            if (hasLeft && hasRight) {
+                array2D[getPosition(x, y)] = CORRIDOR_SYMBOL;
+                return true;
+            } else if (!hasLeft && hasRight) {
+                bool top = (array2D[getPosition(x-1, y-1)] == WALL_SYMBOL);
+                bool bottom = (array2D[getPosition(x-1, y+1)] == WALL_SYMBOL);
+                if (top || bottom) {
+                    array2D[getPosition(x, y)] = CORRIDOR_SYMBOL;
+                    return true;
+                }
+            } else if (!hasRight && hasLeft) {
+                bool top = (array2D[getPosition(x+1, y-1)] == WALL_SYMBOL);
+                bool bottom = (array2D[getPosition(x+1, y+1)] == WALL_SYMBOL);
+                if (top || bottom) {
+                    array2D[getPosition(x, y)] = CORRIDOR_SYMBOL;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // https://github.com/keesiemeijer/maze-generator
+    void removeMazeWalls() {
+        /*if (!this.removeWalls || !this.matrix.length) {
+            return;
+        }*/
+
+        int min = 0;
+        int max = height-1;
+        int maxTries = 100;
+        int tries = 0;
+
+        int wallsRemoved = 0;
+
+        while (tries < maxTries) {
+            tries++;
+
+            if (wallsRemoved >= maxTries) { // is goal achieved?
+                break;
+            }
+
+            // Get random row from array2D
+            int y = floor(((float)rand() / (float)RAND_MAX) * (max-min+1)) + min;
+            if (y == min) {
+                y = y + 1;
+            } else if (y == max) {
+                y = y - 1;
+            }
+            
+            /*
+            * using std:vector instead of array,
+            * to work with it as a STACK when requiring dynamics push
+            * at first the size is not know 
+            */
+            std::vector<int> walls_vector;
+
+            // fixed y, only saving x coordinate
+            for (int x = 1; x < width-2; x++) {
+                if(array2D[getPosition(x, y)] == WALL_SYMBOL) {
+                    walls_vector.push_back(x);
+                }
+            }
+
+            // shuffle walls randomly
+            std::random_shuffle(walls_vector.begin(), walls_vector.end());
+
+            for (int i = 0; i < walls_vector.size(); i++) {
+                if(removeWall(walls_vector[i], y)) {
+                    wallsRemoved++;
+                    break;
+                }
             }
         }
     }
