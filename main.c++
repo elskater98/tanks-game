@@ -191,30 +191,30 @@ void moveEnemy() {
         for (int i = 0; i < 4; i++) {
                 
             int aux = 0;
-        if(enemy.getStatus() == 2){
-            switch (direction[i]) {
-                case UP:
-                    if (!isWall(enemy.getX(), enemy.getY() + 1) && !charactersPlayerCollision(enemy.getX(), enemy.getY() + 1)) {
-                        enemy.init_movement(enemy.getX(), enemy.getY() + 1, enemy_speed);
-                    }
-                    break;
-                case DOWN:
-                    if (!isWall(enemy.getX(), enemy.getY() - 1) && !charactersPlayerCollision(enemy.getX(), enemy.getY() - 1)) {
-                        enemy.init_movement(enemy.getX(), enemy.getY() - 1, enemy_speed);
-                    }
-                    break;
-                case LEFT:
-                    if (!isWall(enemy.getX() - 1, enemy.getY()) && !charactersPlayerCollision(enemy.getX() - 1, enemy.getY())) {
-                        enemy.init_movement(enemy.getX() - 1, enemy.getY(), enemy_speed);
-                    }
-                    break;
-                case RIGHT:
-                    if (!isWall(enemy.getX() + 1, enemy.getY()) && !charactersPlayerCollision(enemy.getX() + 1, enemy.getY())) {
-                        enemy.init_movement(enemy.getX() + 1, enemy.getY(), enemy_speed);
-                    }
-                    break;
+            if(enemy.getStatus() == 2){
+                switch (direction[i]) {
+                    case UP:
+                        if (!isWall(enemy.getX(), enemy.getY() + 1) && !charactersPlayerCollision(enemy.getX(), enemy.getY() + 1)) {
+                            enemy.init_movement(enemy.getX(), enemy.getY() + 1, enemy_speed);
+                        }
+                        break;
+                    case DOWN:
+                        if (!isWall(enemy.getX(), enemy.getY() - 1) && !charactersPlayerCollision(enemy.getX(), enemy.getY() - 1)) {
+                            enemy.init_movement(enemy.getX(), enemy.getY() - 1, enemy_speed);
+                        }
+                        break;
+                    case LEFT:
+                        if (!isWall(enemy.getX() - 1, enemy.getY()) && !charactersPlayerCollision(enemy.getX() - 1, enemy.getY())) {
+                            enemy.init_movement(enemy.getX() - 1, enemy.getY(), enemy_speed);
+                        }
+                        break;
+                    case RIGHT:
+                        if (!isWall(enemy.getX() + 1, enemy.getY()) && !charactersPlayerCollision(enemy.getX() + 1, enemy.getY())) {
+                            enemy.init_movement(enemy.getX() + 1, enemy.getY(), enemy_speed);
+                        }
+                        break;
+                }
             }
-        }
             
             usleep(200000);
             // END GAME https://www.youtube.com/watch?v=dE1P4zDhhqw
