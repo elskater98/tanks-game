@@ -22,6 +22,8 @@ class Character {
         long time_remaining;
         int id;
 
+        float dest_x, dest_y;
+
         void setPosition(float x, float y) {
             this->x = x;
             this->y = y;
@@ -65,16 +67,21 @@ class Character {
                 time_remaining -= t;
             }
             else if (status == MOVE && t >= time_remaining) {
-                x = x + vx*time_remaining;
-                y = y + vy*time_remaining;
+                /*x = x + vx*time_remaining;
+                y = y + vy*time_remaining;*/
+                x = dest_x;
+                y = dest_y;
                 status=QUIET;
             }
         }
 
-        void init_movement(int destination_x, int destination_y, int duration) {
+        void init_movement(float destination_x, float destination_y, float duration) {
             vx = (destination_x - x)/duration;
             vy = (destination_y - y)/duration;
             status = MOVE;
             time_remaining = duration;
+
+            dest_x = destination_x;
+            dest_y = destination_y;
         }
 };

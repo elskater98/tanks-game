@@ -28,8 +28,8 @@ int keyflag = 0;
 int input_width;
 int input_height;
 long last_t = 0;
-int player_speed = 10;
-int enemy_speed = 10;
+int player_speed = 200;
+int enemy_speed = 200;
 
 void displaySquare(int R, int G, int B, int x, int y) {
     glColor3f(R, G, B);
@@ -119,29 +119,32 @@ void askDimensions() {
 }
 
 void keyboard(unsigned char c, int x, int y) {
-    switch (c) {
-        case 'w':
-            if (!isWall(player.getX(), player.getY() + 1) && !charactersEnemyCollision(player.getX(), player.getY() + 1)) {
-                player.init_movement(player.getX(), player.getY() + 1, player_speed);
-            }
-            break;
-        case 's':
-            if (!isWall(player.getX(), player.getY() - 1) && !charactersEnemyCollision(player.getX(), player.getY() - 1)) {
-                player.init_movement(player.getX(), player.getY() - 1, player_speed);
-            }
-            break;
-        case 'a':
-            if (!isWall(player.getX() - 1, player.getY()) && !charactersEnemyCollision(player.getX() - 1, player.getY())) {
-                player.init_movement(player.getX() - 1, player.getY(), player_speed);
-            }
-            break;
-        case 'd':
-            if (!isWall(player.getX() + 1, player.getY()) && !charactersEnemyCollision(player.getX() + 1, player.getY())) {
-                player.init_movement(player.getX() + 1, player.getY(), player_speed);
-            }
-            break;
-    }
 
+    if(player.getStatus() == 2){
+        switch (c) {
+                case 'w':
+                    if (!isWall(player.getX(), player.getY() + 1) && !charactersEnemyCollision(player.getX(), player.getY() + 1)) {
+                        player.init_movement(player.getX(), player.getY() + 1, player_speed);
+                    }
+                    break;
+                case 's':
+                    if (!isWall(player.getX(), player.getY() - 1) && !charactersEnemyCollision(player.getX(), player.getY() - 1)) {
+                        player.init_movement(player.getX(), player.getY() - 1, player_speed);
+                    }
+                    break;
+                case 'a':
+                    if (!isWall(player.getX() - 1, player.getY()) && !charactersEnemyCollision(player.getX() - 1, player.getY())) {
+                        player.init_movement(player.getX() - 1, player.getY(), player_speed);
+                    }
+                    break;
+                case 'd':
+                    if (!isWall(player.getX() + 1, player.getY()) && !charactersEnemyCollision(player.getX() + 1, player.getY())) {
+                        player.init_movement(player.getX() + 1, player.getY(), player_speed);
+                    }
+                default:
+                    break;
+        }    
+    }
     glutPostRedisplay();
 };
 
@@ -188,7 +191,7 @@ void moveEnemy() {
         for (int i = 0; i < 4; i++) {
                 
             int aux = 0;
-
+        if(enemy.getStatus() == 2){
             switch (direction[i]) {
                 case UP:
                     if (!isWall(enemy.getX(), enemy.getY() + 1) && !charactersPlayerCollision(enemy.getX(), enemy.getY() + 1)) {
@@ -211,6 +214,7 @@ void moveEnemy() {
                     }
                     break;
             }
+        }
             
             usleep(200000);
             // END GAME https://www.youtube.com/watch?v=dE1P4zDhhqw
