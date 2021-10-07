@@ -161,11 +161,11 @@ void idle() {
 }
 
 void moveEnemy() {
-    int direction[3] = {UP,RIGHT,LEFT};
+    
     //float weights[4] = {0.4,0.1,0.1,0.4};
 
     while(true){ // Player Initial Position
-        std::random_shuffle(direction, direction + (sizeof(direction)/sizeof(direction[0])));
+        
         /*float order[4];
 
         for (int i = 0; i < 4; i++){
@@ -174,7 +174,18 @@ void moveEnemy() {
 
         sort(weights, weights + sizeof(weights) / sizeof(weights[0]));*/
 
-        for (int i = 0; i < 3; i++) {
+        float d = rand() % 10;
+        int direction[4]= {UP,RIGHT,LEFT,DOWN};;
+
+        if (d < 5)
+        {
+             direction[1] = UP;
+             direction[3] = LEFT; 
+        }
+
+        std::random_shuffle(direction, direction + (sizeof(direction)/sizeof(direction[0])));
+        
+        for (int i = 0; i < 4; i++) {
                 
             int aux = 0;
 
