@@ -67,8 +67,6 @@ class Character {
                 time_remaining -= t;
             }
             else if (status == MOVE && t >= time_remaining) {
-                /*x = x + vx*time_remaining;
-                y = y + vy*time_remaining;*/
                 x = dest_x;
                 y = dest_y;
                 status=QUIET;
