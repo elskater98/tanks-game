@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <thread>
 #include <math.h>
+#include <chrono>
+#include <ctime>
 
 // Own Libraries
 #include "map.c++"
@@ -44,6 +46,8 @@ int anglebeta = 25;
 float zoomLevel = 0.5f;
 float cameraX;
 float cameraY;
+
+auto start = std::chrono::system_clock::now();
 
 void displaySquare(int R, int G, int B, int x, int y)
 {
@@ -122,6 +126,24 @@ void displayInitialPlayer(int x, int y)
 void displayInitialEnemy(int x, int y)
 {
     displaySquare(139, 0, 0, x, y);
+}
+
+void printElapsedTime()
+{
+    // Some computation here
+    auto end = std::chrono::system_clock::now();
+
+    std::chrono::duration<double> elapsed_seconds = end - start;
+
+    glColor3f(0.0, 255, 0.0);
+    glRasterPos2f(1 * cell_width, 1 * cell_width / 2);
+
+    std::string text = "Elapsed Time: "+ std::to_string(elapsed_seconds.count());
+
+    for (int i = 0; i < text.size(); i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, text[i]);
+    }
 }
 
 void showMap()
@@ -235,6 +257,8 @@ void display()
     player.display();
     enemy.display();
 
+    printElapsedTime();
+
     glutSwapBuffers();
 }
 
@@ -308,6 +332,7 @@ void keyboard(unsigned char c, int x, int y)
         map.create(input_width, input_height);
         player.init(0, 1, map.height - 2);
         enemy.init(1, map.width - 2, 1);
+        start = std::chrono::system_clock::now();
         break;
     case 'i':
         if (anglebeta <= (90 - 4))
@@ -444,6 +469,7 @@ int main(int argc, char *argv[])
     cameraX = (cell_width * map.width);
     cameraY = (cell_width * map.height);
     map.print();
+    start = std::chrono::system_clock::now();
 
     // Create Player
     player.init(0, 1, map.height - 2);
