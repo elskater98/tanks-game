@@ -29,7 +29,7 @@ Map map = Map();
 Character player = Character();
 Character enemy = Character();
 
-int cell_width = 10;
+int cell_width = 25;
 int keyflag = 0;
 int input_width;
 int input_height;
@@ -39,7 +39,11 @@ int enemy_speed = 200;
 
 // Observation
 int anglealpha = 0;
-int anglebeta = 0;
+int anglebeta = 25;
+
+float zoomLevel = 0.5f;
+float cameraX;
+float cameraY;
 
 void displaySquare(int R, int G, int B, int x, int y)
 {
@@ -61,41 +65,41 @@ void displaySquare(int R, int G, int B, int x, int y)
 
     glColor3f(R, G, B);
     glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);                          
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);             
+    glVertex3i(x * (cell_width), y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);             
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
     glEnd();
 
     glColor3f(R, G, B);
     glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);                       
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);          
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width); 
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);              
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
     glEnd();
 
     glColor3f(R, G, B);
     glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);                       
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);          
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width); 
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);              
+    glVertex3i(x * (cell_width), y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
+    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
     glEnd();
 
     glColor3f(R, G, B);
     glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);          
-    glVertex3i(x * (cell_width), y * (cell_width), 0);                       
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);              
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width); 
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width), y * (cell_width), 0);
+    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
     glEnd();
 
     glColor3f(R, G, B);
     glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);         
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);                      
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);             
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
     glEnd();
 }
@@ -216,7 +220,11 @@ void display()
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0, (cell_width * map.width) - 1, 0, (cell_width * map.height) - 1, 10, 2000);
+    glOrtho((-cameraX * 0.6) - zoomLevel * 2,
+            (cameraX * 0.6) + zoomLevel * 2,
+            (-cameraY * 0.6) - zoomLevel * 2,
+            (cameraY * 0.6) + zoomLevel * 2,
+            5, 2000);
 
     glMatrixMode(GL_MODELVIEW);
 
@@ -224,8 +232,8 @@ void display()
     glPolygonMode(GL_BACK, GL_LINE);
 
     showMap();
-    /*player.display();
-    enemy.display();*/
+    player.display();
+    enemy.display();
 
     glutSwapBuffers();
 }
@@ -242,6 +250,29 @@ void askDimensions()
     cin >> input_height;
 
     cout << "[INFO] Generating " << input_width << "x" << input_height;
+}
+
+void zoomFunc(int direction)
+{
+
+    if (direction == 1)
+    {
+        cameraX += (cameraX - cell_width * map.width) * 0.5f;
+        cameraY += (cameraY - cell_width * map.height) * 0.5f;
+        zoomLevel += 2.5f;
+    }
+    else if (direction == 2)
+    {
+        cameraX -= (cameraX - cell_width * map.width) * 0.5f;
+        cameraY -= (cameraY - cell_width * map.height) * 0.5f;
+        zoomLevel -= 2.5f;
+    }
+    else if (direction == 3)
+    {
+        cameraX = (cell_width * map.width);
+        cameraY = (cell_width * map.height);
+        zoomLevel = 1.5f;
+    }
 }
 
 void keyboard(unsigned char c, int x, int y)
@@ -295,6 +326,15 @@ void keyboard(unsigned char c, int x, int y)
         break;
     case 'l':
         anglealpha = (anglealpha - 3 + 360) % 360;
+        break;
+    case '-':
+        zoomFunc(1);
+        break;
+    case '+':
+        zoomFunc(2);
+        break;
+    case 'z':
+        zoomFunc(3);
         break;
     default:
         break;
@@ -401,6 +441,8 @@ int main(int argc, char *argv[])
 
     srand(time(NULL));                     // Set Seed to geneate random numbers
     map.create(input_width, input_height); // create map
+    cameraX = (cell_width * map.width);
+    cameraY = (cell_width * map.height);
     map.print();
 
     // Create Player
@@ -415,7 +457,6 @@ int main(int argc, char *argv[])
     glutInitWindowPosition(50, 50);
     glutInitWindowSize(cell_width * map.width, cell_width * map.height);
     glutCreateWindow("~ Game ~");
-    glEnable(GL_DEPTH_TEST);
 
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);

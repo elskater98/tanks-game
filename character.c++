@@ -12,7 +12,7 @@ using namespace std;
 #define MOVE 1
 #define QUIET 2
 
-#define MAP_CELL_WIDTH 10
+#define MAP_CELL_WIDTH 25
 
 class Character {
     private:
