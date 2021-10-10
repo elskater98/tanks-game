@@ -50,207 +50,142 @@ float maxTimeLeft = 120.0; // seconds
 
 void displayWall(int x, int y)
 {
-    glColor3f(0, 0, 1);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);                           // V1
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);              // V2
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width); // V3
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);              // V4
 
-    glColor3f(0, 0, 1);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 2);
     glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
-    glEnd();
-
-    glColor3f(0, 0, 1);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+    glTexCoord2f(-0.25, 0.0);
+    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
+    glTexCoord2f(0.25, 0.0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
+    glTexCoord2f(0.25, 0.25);
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
-    glEnd();
-
-    glColor3f(0, 0, 1);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
-    glEnd();
-
-    glColor3f(1, 0, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
+    glTexCoord2f(-0.25, 0.25);
     glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
     glEnd();
+    glDisable(GL_TEXTURE_2D);
 
-    glColor3f(1, 0, 0);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glBegin(GL_QUADS);
+    glTexCoord2f(-1.0, 0.0);
+    glVertex3i(x * (cell_width), y * (cell_width), 0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+    glTexCoord2f(1.0, 1.0);
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+    glTexCoord2f(-1.0, 1.0);
     glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBegin(GL_QUADS);
+    glTexCoord2f(-1.0, 0.0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
+    glTexCoord2f(-1.0, 1.0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBegin(GL_QUADS);
+    glTexCoord2f(-1.0, 0.0);
+    glVertex3i(x * (cell_width), y * (cell_width), 0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
+    glTexCoord2f(-1.0, 1.0);
+    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBegin(GL_QUADS);
+    glTexCoord2f(-1.0, 0.0);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3i(x * (cell_width), y * (cell_width), 0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
+    glTexCoord2f(-1.0, 1.0);
     glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBegin(GL_QUADS);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+    glTexCoord2f(-1.0, 0.0);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+    glTexCoord2f(-0.5, 0.5);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
+    glTexCoord2f(0.5, 0.5);
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
     glEnd();
+    glDisable(GL_TEXTURE_2D);
 }
 
 void displayCorridor(int x, int y)
 {
 
-    glColor3f(0, 0, 0);
+    glBindTexture(GL_TEXTURE_2D, 1);
+    glEnable(GL_TEXTURE_2D);
     glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);                           // V1
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);              // V2
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width); // V3
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);              // V4
-
-    glColor3f(0, 0, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+    glTexCoord2f(-0.5, 0.0);
+    glVertex2i(x * (cell_width), y * (cell_width));
+    glTexCoord2f(0.5, 0.0);
+    glVertex2i(x * (cell_width) + cell_width, y * (cell_width));
+    glTexCoord2f(0.5, 0.5);
+    glVertex2i(x * (cell_width) + cell_width, y * (cell_width) + cell_width);
+    glTexCoord2f(-0.5, 0.5);
+    glVertex2i(x * (cell_width), y * (cell_width) + cell_width);
     glEnd();
-
-    glColor3f(0, 0, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
-    glEnd();
-
-    glColor3f(0, 0, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
-    glEnd();
-
-    glColor3f(0, 0, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
-    glEnd();
-
-    glColor3f(0, 0, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
-    glEnd();
+    glDisable(GL_TEXTURE_2D);
 }
 
 void displayInitialPlayer(int x, int y)
 {
-
-    glColor3f(0, 100, 0);
+    glBindTexture(GL_TEXTURE_2D, 3);
+    glEnable(GL_TEXTURE_2D);
     glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);                           // V1
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);              // V2
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width); // V3
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);              // V4
+    glTexCoord2f(-0.5, 0.0);
+    glVertex2i(x * (cell_width), y * (cell_width));
+    glTexCoord2f(0.5, 0.0);
+    glVertex2i(x * (cell_width) + cell_width, y * (cell_width));
+    glTexCoord2f(0.5, 0.5);
+    glVertex2i(x * (cell_width) + cell_width, y * (cell_width) + cell_width);
+    glTexCoord2f(-0.5, 0.5);
+    glVertex2i(x * (cell_width), y * (cell_width) + cell_width);
     glEnd();
-
-    glColor3f(0, 100, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
-    glEnd();
-
-    glColor3f(0, 100, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
-    glEnd();
-
-    glColor3f(0, 100, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
-    glEnd();
-
-    glColor3f(0, 100, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
-    glEnd();
-
-    glColor3f(0, 100, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
-    glEnd();
+    glDisable(GL_TEXTURE_2D);
 }
 
 void displayInitialEnemy(int x, int y)
 {
-
-    glColor3f(139, 0, 0);
+    glBindTexture(GL_TEXTURE_2D, 4);
+    glEnable(GL_TEXTURE_2D);
     glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);                           // V1
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);              // V2
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width); // V3
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);              // V4
+    glTexCoord2f(-0.5, 0.0);
+    glVertex2i(x * (cell_width), y * (cell_width));
+    glTexCoord2f(0.5, 0.0);
+    glVertex2i(x * (cell_width) + cell_width, y * (cell_width));
+    glTexCoord2f(0.5, 0.5);
+    glVertex2i(x * (cell_width) + cell_width, y * (cell_width) + cell_width);
+    glTexCoord2f(-0.5, 0.5);
+    glVertex2i(x * (cell_width), y * (cell_width) + cell_width);
     glEnd();
-
-    glColor3f(139, 0, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
-    glEnd();
-
-    glColor3f(139, 0, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
-    glEnd();
-
-    glColor3f(139, 0, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
-    glEnd();
-
-    glColor3f(139, 0, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
-    glEnd();
-
-    glColor3f(139, 0, 0);
-    glBegin(GL_QUADS);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
-    glEnd();
+    glDisable(GL_TEXTURE_2D);
 }
 
 void printTimeLeft()
@@ -625,14 +560,27 @@ void LoadTexture(char *filename, int dim)
     free(buffer);
     free(buffer2);
 }
-
 void loadGameTextures()
 {
-    /*glBindTexture(GL_TEXTURE_2D, 0);
-    LoadTexture("textures/ice.jpg", 64);
+    //wall
+    glBindTexture(GL_TEXTURE_2D, 0);
+    LoadTexture((char *)"textures/wall.jpg", 64);
 
+    // roof
     glBindTexture(GL_TEXTURE_2D, 1);
-    LoadTexture("textures/ice.jpg", 64);*/
+    LoadTexture((char *)"textures/roof.jpg", 64);
+
+    // path
+    glBindTexture(GL_TEXTURE_2D, 2);
+    LoadTexture((char *)"textures/floor.jpg", 64);
+
+    // water
+    glBindTexture(GL_TEXTURE_2D, 3);
+    LoadTexture((char *)"textures/water.jpg", 64);
+
+    // path
+    glBindTexture(GL_TEXTURE_2D, 4);
+    LoadTexture((char *)"textures/lava.jpg", 64);
 }
 
 int main(int argc, char *argv[])
@@ -669,6 +617,7 @@ int main(int argc, char *argv[])
     glutKeyboardFunc(keyboard);
     glutIdleFunc(idle);
 
+    //Load Textures
     loadGameTextures();
 
     glutMainLoop();
