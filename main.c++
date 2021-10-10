@@ -201,7 +201,6 @@ void printTimeLeft()
     }
 
     glColor3f(0.0, 255, 0.0);
-    //glTranslatef(cell_width, cell_width,cell_width);
 
     std::string text = "Time: Left " + std::to_string(maxTimeLeft - elapsed_seconds.count());
 
