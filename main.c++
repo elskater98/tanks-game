@@ -41,15 +41,12 @@ int player_speed = 200;
 int enemy_speed = 200;
 
 // Observation
-int anglealpha = 165;
-int anglebeta = 0;
-
-float zoomLevel = 0.25f;
-float cameraX;
-float cameraY;
+int anglealpha = 90;
+int anglebeta = 30;
+float zoom = 0.7f;
 
 auto start = std::chrono::system_clock::now();
-auto maxTimeLeft = 120.0; // seconds
+float maxTimeLeft = 120.0; // seconds
 
 void displayWall(int x, int y)
 {
@@ -161,6 +158,7 @@ void displayInitialPlayer(int x, int y)
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);              // V2
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width); // V3
     glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);              // V4
+    glEnd();
 
     glColor3f(0, 100, 0);
     glBegin(GL_QUADS);
@@ -212,6 +210,7 @@ void displayInitialEnemy(int x, int y)
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);              // V2
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width); // V3
     glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);              // V4
+    glEnd();
 
     glColor3f(139, 0, 0);
     glBegin(GL_QUADS);
@@ -289,19 +288,18 @@ void showMap()
             }
             else if (map.array2D[map.getPosition(x, y)] == map.getCorridorSymbol())
             {
-                displayCorridor(x, y);
-            }
-
-            // Player
-            if (x == 1 && y == map.height - 2)
-            {
-                displayInitialPlayer(x, y);
-            }
-
-            // Enemy
-            if (x == map.width - 2 && y == 1)
-            {
-                displayInitialEnemy(x, y);
+                if (x == 1 && y == map.height - 2)
+                {
+                    displayInitialPlayer(x, y);
+                }
+                else if (x == map.width - 2 && y == 1)
+                {
+                    displayInitialEnemy(x, y);
+                }
+                else
+                {
+                    displayCorridor(x, y);
+                }
             }
         }
     }
@@ -357,7 +355,7 @@ void PositionObserver(float alpha, float beta, int radi)
     upy = upy / modul;
     upz = upz / modul;
 
-    gluLookAt(x, y, z, 0.0, 0.0, 0.0, upx, upy, upz);
+    gluLookAt(x, y, z, (map.width * cell_width) / 2, (map.height * cell_width) / 2, cell_width, upx, upy, upz);
 }
 
 void display()
@@ -369,27 +367,24 @@ void display()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    PositionObserver(anglealpha, anglebeta, cell_width / 2);
+    PositionObserver(anglealpha, anglebeta, 600);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    glOrtho((-cameraX * 0.6) - zoomLevel,
-            (cameraX * 0.6) + zoomLevel,
-            (-cameraY * 0.6) - zoomLevel,
-            (cameraY * 0.6) + zoomLevel,
-            10, 2000);
+    glOrtho(-cell_width * map.width * zoom, cell_width * map.width * zoom, -cell_width * map.height * zoom, cell_width * map.height * zoom, 10, 2000);
 
     glMatrixMode(GL_MODELVIEW);
 
     glPolygonMode(GL_FRONT, GL_FILL);
-    glPolygonMode(GL_BACK, GL_LINE);
+    glPolygonMode(GL_BACK, GL_FILL);
 
     showMap();
-    player.display();
-    enemy.display();
+    //player.display();
+    //enemy.display();
 
-    printTimeLeft();
+    // HUD
+    //printTimeLeft();
 
     glutSwapBuffers();
 }
@@ -406,29 +401,6 @@ void askDimensions()
     cin >> input_height;
 
     cout << "[INFO] Generating " << input_width << "x" << input_height;
-}
-
-void resetZoom()
-{
-
-    cameraX = (cell_width * map.width);
-    cameraY = (cell_width * map.height);
-    zoomLevel = 0.25f;
-}
-
-void zoomIn()
-{
-    cameraX -= (cameraX - cell_width * map.width) * 0.5f;
-    cameraY -= (cameraY - cell_width * map.height) * 0.5f;
-    zoomLevel -= 2.5f;
-}
-
-void zoomOut()
-{
-
-    cameraX += (cameraX - cell_width * map.width) * 0.5f;
-    cameraY += (cameraY - cell_width * map.height) * 0.5f;
-    zoomLevel += 2.5f;
 }
 
 void keyboard(unsigned char c, int x, int y)
@@ -488,15 +460,6 @@ void keyboard(unsigned char c, int x, int y)
         break;
     case 'l':
         anglealpha = (anglealpha - 3 + 360) % 360;
-        break;
-    case '-':
-        zoomOut();
-        break;
-    case '+':
-        zoomIn();
-        break;
-    case 'z':
-        resetZoom();
         break;
     default:
         break;
@@ -665,11 +628,11 @@ void LoadTexture(char *filename, int dim)
 
 void loadGameTextures()
 {
-    glBindTexture(GL_TEXTURE_2D, 0);
+    /*glBindTexture(GL_TEXTURE_2D, 0);
     LoadTexture("textures/ice.jpg", 64);
 
     glBindTexture(GL_TEXTURE_2D, 1);
-    LoadTexture("textures/ice.jpg", 64);
+    LoadTexture("textures/ice.jpg", 64);*/
 }
 
 int main(int argc, char *argv[])
@@ -680,10 +643,6 @@ int main(int argc, char *argv[])
     srand(time(NULL)); // Set Seed to geneate random numbers
 
     map.create(input_width, input_height); // create map
-
-    // Init Camera Position
-    cameraX = (cell_width * map.width);
-    cameraY = (cell_width * map.height);
 
     map.print();
 
