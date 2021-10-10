@@ -6,6 +6,7 @@
 #include <math.h>
 #include <chrono>
 #include <ctime>
+#include <jpeglib.h>
 
 // Own Libraries
 #include "map.c++"
@@ -40,34 +41,26 @@ int player_speed = 200;
 int enemy_speed = 200;
 
 // Observation
-int anglealpha = 0;
-int anglebeta = 25;
+int anglealpha = 165;
+int anglebeta = 0;
 
-float zoomLevel = 0.5f;
+float zoomLevel = 0.25f;
 float cameraX;
 float cameraY;
 
 auto start = std::chrono::system_clock::now();
+auto maxTimeLeft = 120.0; // seconds
 
-void displaySquare(int R, int G, int B, int x, int y)
+void displayWall(int x, int y)
 {
-
-    /*
-        V4--------V3  |
-        |   /     |  /
-        |  /      | /
-        | /       |/
-        V1--------V2
-    */
-
-    glColor3f(R, G, B);
+    glColor3f(0, 0, 1);
     glBegin(GL_QUADS);
     glVertex3i(x * (cell_width), y * (cell_width), cell_width);                           // V1
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);              // V2
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width); // V3
     glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);              // V4
 
-    glColor3f(R, G, B);
+    glColor3f(0, 0, 1);
     glBegin(GL_QUADS);
     glVertex3i(x * (cell_width), y * (cell_width), 0);
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
@@ -75,7 +68,7 @@ void displaySquare(int R, int G, int B, int x, int y)
     glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
     glEnd();
 
-    glColor3f(R, G, B);
+    glColor3f(0, 0, 1);
     glBegin(GL_QUADS);
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
@@ -83,7 +76,7 @@ void displaySquare(int R, int G, int B, int x, int y)
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
     glEnd();
 
-    glColor3f(R, G, B);
+    glColor3f(0, 0, 1);
     glBegin(GL_QUADS);
     glVertex3i(x * (cell_width), y * (cell_width), 0);
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
@@ -91,7 +84,7 @@ void displaySquare(int R, int G, int B, int x, int y)
     glVertex3i(x * (cell_width), y * (cell_width), cell_width);
     glEnd();
 
-    glColor3f(R, G, B);
+    glColor3f(1, 0, 0);
     glBegin(GL_QUADS);
     glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
     glVertex3i(x * (cell_width), y * (cell_width), 0);
@@ -99,50 +92,188 @@ void displaySquare(int R, int G, int B, int x, int y)
     glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
     glEnd();
 
-    glColor3f(R, G, B);
+    glColor3f(1, 0, 0);
     glBegin(GL_QUADS);
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
     glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
     glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
     glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
     glEnd();
-}
-
-void displayWall(int x, int y)
-{
-    displaySquare(0.0, 0, 1, x, y);
 }
 
 void displayCorridor(int x, int y)
 {
-    displaySquare(0.0, 0.0, 0.0, x, y);
+
+    glColor3f(0, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width), y * (cell_width), cell_width);                           // V1
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);              // V2
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width); // V3
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);              // V4
+
+    glColor3f(0, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width), y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+    glEnd();
+
+    glColor3f(0, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
+    glEnd();
+
+    glColor3f(0, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width), y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
+    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
+    glEnd();
+
+    glColor3f(0, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width), y * (cell_width), 0);
+    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
+    glEnd();
+
+    glColor3f(0, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
+    glEnd();
 }
 
 void displayInitialPlayer(int x, int y)
 {
-    displaySquare(0, 100, 0, x, y);
+
+    glColor3f(0, 100, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width), y * (cell_width), cell_width);                           // V1
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);              // V2
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width); // V3
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);              // V4
+
+    glColor3f(0, 100, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width), y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+    glEnd();
+
+    glColor3f(0, 100, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
+    glEnd();
+
+    glColor3f(0, 100, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width), y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
+    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
+    glEnd();
+
+    glColor3f(0, 100, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width), y * (cell_width), 0);
+    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
+    glEnd();
+
+    glColor3f(0, 100, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
+    glEnd();
 }
 
 void displayInitialEnemy(int x, int y)
 {
-    displaySquare(139, 0, 0, x, y);
+
+    glColor3f(139, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width), y * (cell_width), cell_width);                           // V1
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);              // V2
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width); // V3
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);              // V4
+
+    glColor3f(139, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width), y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+    glEnd();
+
+    glColor3f(139, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
+    glEnd();
+
+    glColor3f(139, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width), y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
+    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
+    glEnd();
+
+    glColor3f(139, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width), y * (cell_width), 0);
+    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
+    glEnd();
+
+    glColor3f(139, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
+    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
+    glEnd();
 }
 
-void printElapsedTime()
+void printTimeLeft()
 {
-    // Some computation here
     auto end = std::chrono::system_clock::now();
 
     std::chrono::duration<double> elapsed_seconds = end - start;
 
-    glColor3f(0.0, 255, 0.0);
-    glRasterPos2f(1 * cell_width, 1 * cell_width / 2);
+    // Time Left Exceeded
+    if (maxTimeLeft - elapsed_seconds.count() < 0)
+    {
+        exit(0);
+    }
 
-    std::string text = "Elapsed Time: "+ std::to_string(elapsed_seconds.count());
+    glColor3f(0.0, 255, 0.0);
+    //glTranslatef(cell_width, cell_width,cell_width);
+
+    std::string text = "Time: Left " + std::to_string(maxTimeLeft - elapsed_seconds.count());
 
     for (int i = 0; i < text.size(); i++)
     {
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, text[i]);
+        glutStrokeCharacter(GLUT_STROKE_ROMAN, text[i]);
     }
 }
 
@@ -238,15 +369,16 @@ void display()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    PositionObserver(anglealpha, anglebeta, 600);
+    PositionObserver(anglealpha, anglebeta, cell_width / 2);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho((-cameraX * 0.6) - zoomLevel * 2,
-            (cameraX * 0.6) + zoomLevel * 2,
-            (-cameraY * 0.6) - zoomLevel * 2,
-            (cameraY * 0.6) + zoomLevel * 2,
-            5, 2000);
+
+    glOrtho((-cameraX * 0.6) - zoomLevel,
+            (cameraX * 0.6) + zoomLevel,
+            (-cameraY * 0.6) - zoomLevel,
+            (cameraY * 0.6) + zoomLevel,
+            10, 2000);
 
     glMatrixMode(GL_MODELVIEW);
 
@@ -257,7 +389,7 @@ void display()
     player.display();
     enemy.display();
 
-    printElapsedTime();
+    printTimeLeft();
 
     glutSwapBuffers();
 }
@@ -276,27 +408,27 @@ void askDimensions()
     cout << "[INFO] Generating " << input_width << "x" << input_height;
 }
 
-void zoomFunc(int direction)
+void resetZoom()
 {
 
-    if (direction == 1)
-    {
-        cameraX += (cameraX - cell_width * map.width) * 0.5f;
-        cameraY += (cameraY - cell_width * map.height) * 0.5f;
-        zoomLevel += 2.5f;
-    }
-    else if (direction == 2)
-    {
-        cameraX -= (cameraX - cell_width * map.width) * 0.5f;
-        cameraY -= (cameraY - cell_width * map.height) * 0.5f;
-        zoomLevel -= 2.5f;
-    }
-    else if (direction == 3)
-    {
-        cameraX = (cell_width * map.width);
-        cameraY = (cell_width * map.height);
-        zoomLevel = 1.5f;
-    }
+    cameraX = (cell_width * map.width);
+    cameraY = (cell_width * map.height);
+    zoomLevel = 0.25f;
+}
+
+void zoomIn()
+{
+    cameraX -= (cameraX - cell_width * map.width) * 0.5f;
+    cameraY -= (cameraY - cell_width * map.height) * 0.5f;
+    zoomLevel -= 2.5f;
+}
+
+void zoomOut()
+{
+
+    cameraX += (cameraX - cell_width * map.width) * 0.5f;
+    cameraY += (cameraY - cell_width * map.height) * 0.5f;
+    zoomLevel += 2.5f;
 }
 
 void keyboard(unsigned char c, int x, int y)
@@ -304,6 +436,7 @@ void keyboard(unsigned char c, int x, int y)
 
     switch (c)
     {
+    // Player Keys
     case 'w':
         if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() + 1) && !charactersEnemyCollision(player.getX(), player.getY() + 1))
         {
@@ -328,12 +461,16 @@ void keyboard(unsigned char c, int x, int y)
             player.init_movement(player.getX() + 1, player.getY(), player_speed);
         }
         break;
+
+    // Reset Map
     case 'r':
         map.create(input_width, input_height);
         player.init(0, 1, map.height - 2);
         enemy.init(1, map.width - 2, 1);
         start = std::chrono::system_clock::now();
         break;
+
+    // Camera Keys
     case 'i':
         if (anglebeta <= (90 - 4))
         {
@@ -353,13 +490,13 @@ void keyboard(unsigned char c, int x, int y)
         anglealpha = (anglealpha - 3 + 360) % 360;
         break;
     case '-':
-        zoomFunc(1);
+        zoomOut();
         break;
     case '+':
-        zoomFunc(2);
+        zoomIn();
         break;
     case 'z':
-        zoomFunc(3);
+        resetZoom();
         break;
     default:
         break;
@@ -388,20 +525,8 @@ void idle()
 
 void moveEnemy()
 {
-
-    //float weights[4] = {0.4,0.1,0.1,0.4};
-
     while (true)
-    { // Player Initial Position
-
-        /*float order[4];
-
-        for (int i = 0; i < 4; i++){
-            order[i] = pow(rand() % 10, 1 / weights[i]);
-        }
-
-        sort(weights, weights + sizeof(weights) / sizeof(weights[0]));*/
-
+    {
         float d = rand() % 10;
         int direction[4] = {UP, RIGHT, LEFT, DOWN};
         ;
@@ -459,16 +584,110 @@ void moveEnemy()
     }
 }
 
+void readJPEG(char *filename, unsigned char **image, int *width, int *height)
+{
+    struct jpeg_decompress_struct cinfo;
+    struct jpeg_error_mgr jerr;
+    FILE *infile;
+    unsigned char **buffer;
+    int i, j;
+
+    cinfo.err = jpeg_std_error(&jerr);
+    jpeg_create_decompress(&cinfo);
+
+    if ((infile = fopen(filename, "rb")) == NULL)
+    {
+        printf("Unable to open file %s\n", filename);
+        exit(1);
+    }
+
+    jpeg_stdio_src(&cinfo, infile);
+    jpeg_read_header(&cinfo, TRUE);
+    jpeg_calc_output_dimensions(&cinfo);
+    jpeg_start_decompress(&cinfo);
+
+    *width = cinfo.output_width;
+    *height = cinfo.output_height;
+
+    *image = (unsigned char *)malloc(cinfo.output_width * cinfo.output_height * cinfo.output_components);
+
+    buffer = (unsigned char **)malloc(1 * sizeof(unsigned char **));
+    buffer[0] = (unsigned char *)malloc(cinfo.output_width * cinfo.output_components);
+
+    i = 0;
+    while (cinfo.output_scanline < cinfo.output_height)
+    {
+        jpeg_read_scanlines(&cinfo, buffer, 1);
+
+        for (j = 0; j < cinfo.output_width * cinfo.output_components; j++)
+        {
+            (*image)[i] = buffer[0][j];
+            i++;
+        }
+    }
+
+    free(buffer);
+    jpeg_finish_decompress(&cinfo);
+}
+
+void LoadTexture(char *filename, int dim)
+{
+    unsigned char *buffer;
+    unsigned char *buffer2;
+    int width, height;
+    long i, j;
+    long k, h;
+
+    readJPEG(filename, &buffer, &width, &height);
+
+    buffer2 = (unsigned char *)malloc(dim * dim * 3);
+
+    //-- The texture pattern is subsampled so that its dimensions become dim x dim --
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++)
+        {
+            k = i * height / dim;
+            h = j * width / dim;
+
+            buffer2[3 * (i * dim + j)] = buffer[3 * (k * width + h)];
+            buffer2[3 * (i * dim + j) + 1] = buffer[3 * (k * width + h) + 1];
+            buffer2[3 * (i * dim + j) + 2] = buffer[3 * (k * width + h) + 2];
+        }
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, dim, dim, 0, GL_RGB, GL_UNSIGNED_BYTE, buffer2);
+
+    free(buffer);
+    free(buffer2);
+}
+
+void loadGameTextures()
+{
+    glBindTexture(GL_TEXTURE_2D, 0);
+    LoadTexture("textures/ice.jpg", 64);
+
+    glBindTexture(GL_TEXTURE_2D, 1);
+    LoadTexture("textures/ice.jpg", 64);
+}
+
 int main(int argc, char *argv[])
 {
 
     askDimensions();
 
-    srand(time(NULL));                     // Set Seed to geneate random numbers
+    srand(time(NULL)); // Set Seed to geneate random numbers
+
     map.create(input_width, input_height); // create map
+
+    // Init Camera Position
     cameraX = (cell_width * map.width);
     cameraY = (cell_width * map.height);
+
     map.print();
+
+    // Init Time Left
     start = std::chrono::system_clock::now();
 
     // Create Player
@@ -478,15 +697,20 @@ int main(int argc, char *argv[])
     enemy.init(1, map.width - 2, 1);
     thread t1(moveEnemy);
 
+    // Set window
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowPosition(50, 50);
     glutInitWindowSize(cell_width * map.width, cell_width * map.height);
     glutCreateWindow("~ Game ~");
+    glEnable(GL_DEPTH_TEST);
 
     glutDisplayFunc(display);
+
     glutKeyboardFunc(keyboard);
     glutIdleFunc(idle);
+
+    loadGameTextures();
 
     glutMainLoop();
 
