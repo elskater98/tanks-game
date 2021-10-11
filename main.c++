@@ -190,6 +190,8 @@ void displayInitialEnemy(int x, int y)
 
 void printTimeLeft()
 {
+
+    //https://stackoverflow.com/questions/18847109/displaying-fixed-location-2d-text-in-a-3d-opengl-world-using-glut/21923064
     auto end = std::chrono::system_clock::now();
 
     std::chrono::duration<double> elapsed_seconds = end - start;
@@ -202,11 +204,22 @@ void printTimeLeft()
 
     glColor3f(0.0, 255, 0.0);
 
-    std::string text = "Time: Left " + std::to_string(maxTimeLeft - elapsed_seconds.count());
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0.0, cell_width * map.width, 0.0, cell_width * map.height);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glColor3f(1.0f, 0.0f, 0.0f); //needs to be called before RasterPos
+    glRasterPos2i(10, 10);
+    std::string text = "Time: Left " + std::to_string(maxTimeLeft - elapsed_seconds.count()) + " s";
+    void *font = GLUT_BITMAP_9_BY_15;
 
-    for (int i = 0; i < text.size(); i++)
+    for (std::string::iterator i = text.begin(); i != text.end(); ++i)
     {
-        glutStrokeCharacter(GLUT_STROKE_ROMAN, text[i]);
+        char c = *i;
+        //this does nothing, color is fixed for Bitmaps when calling glRasterPos
+        //glColor3f(1.0, 0.0, 1.0);
+        glutBitmapCharacter(font, c);
     }
 }
 
@@ -318,9 +331,10 @@ void display()
     //enemy.display();
 
     // HUD
-    //printTimeLeft();
+    printTimeLeft();
 
     glutSwapBuffers();
+    glutPostRedisplay();
 }
 
 void askDimensions()
