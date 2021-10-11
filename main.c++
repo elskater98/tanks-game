@@ -221,6 +221,8 @@ void printTimeLeft()
         //glColor3f(1.0, 0.0, 1.0);
         glutBitmapCharacter(font, c);
     }
+    // https://stackoverflow.com/questions/8956736/glcolor-coloring-all-textures/26526213
+    glColor4f(1.f, 1.f, 1.f, 1.f); // unbind the texture
 }
 
 void showMap()
