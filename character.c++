@@ -53,11 +53,80 @@ class Character {
             (id == 0) ? glColor3f(255, 0, 240) : glColor3f(255, 255, 0);
             
             glBegin(GL_QUADS);
-            glVertex2i(x * MAP_CELL_WIDTH + MAP_CELL_WIDTH/4, y * MAP_CELL_WIDTH + MAP_CELL_WIDTH/4); // top left
-            glVertex2i(x * MAP_CELL_WIDTH + MAP_CELL_WIDTH - MAP_CELL_WIDTH/4, y * MAP_CELL_WIDTH + MAP_CELL_WIDTH/4); // top right 
-            glVertex2i(x * MAP_CELL_WIDTH + MAP_CELL_WIDTH - MAP_CELL_WIDTH/4, y * MAP_CELL_WIDTH + MAP_CELL_WIDTH - MAP_CELL_WIDTH/4); // bottom right
-            glVertex2i(x * MAP_CELL_WIDTH + MAP_CELL_WIDTH/4, y * MAP_CELL_WIDTH + MAP_CELL_WIDTH - MAP_CELL_WIDTH/4); // bottom left
+            glTexCoord2f(-0.25, 0.0);
+            glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH);
+            glTexCoord2f(0.25, 0.0);
+            glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH);
+            glTexCoord2f(0.25, 0.25);
+            glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH);
+            glTexCoord2f(-0.25, 0.25);
+            glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH);
             glEnd();
+
+            glBegin(GL_QUADS);
+            glTexCoord2f(-1.0, 0.0);
+            glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH), 0);
+            glTexCoord2f(1.0, 0.0);
+            glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH), 0);
+            glTexCoord2f(1.0, 1.0);
+            glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, 0);
+            glTexCoord2f(-1.0, 1.0);
+            glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, 0);
+            glEnd();
+
+            glBegin(GL_QUADS);
+            glTexCoord2f(-1.0, 0.0);
+            glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH), 0);
+            glTexCoord2f(1.0, 0.0);
+            glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, 0);
+            glTexCoord2f(1.0, 1.0);
+            glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH);
+            glTexCoord2f(-1.0, 1.0);
+            glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH);
+            glEnd();
+
+            glBegin(GL_QUADS);
+            glTexCoord2f(-1.0, 0.0);
+            glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH), 0);
+            glTexCoord2f(1.0, 0.0);
+            glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH), 0);
+            glTexCoord2f(1.0, 1.0);
+            glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH);
+            glTexCoord2f(-1.0, 1.0);
+            glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH);
+            glEnd();
+
+            glBegin(GL_QUADS);
+            glTexCoord2f(-1.0, 0.0);
+            glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, 0);
+            glTexCoord2f(1.0, 0.0);
+            glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH), 0);
+            glTexCoord2f(1.0, 1.0);
+            glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH);
+            glTexCoord2f(-1.0, 1.0);
+            glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH);
+            glEnd();
+
+            glBegin(GL_QUADS);
+            glTexCoord2f(1.0, 0.0);
+            glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, 0);
+            glTexCoord2f(-1.0, 0.0);
+            glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, 0);
+            glTexCoord2f(-0.5, 0.5);
+            glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH);
+            glTexCoord2f(0.5, 0.5);
+            glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH);
+            glEnd();
+
+            glColor4f(1.f, 1.f, 1.f, 1.f);
+
+            /*
+            glBegin(GL_QUADS);
+            glVertex2i(x * MAP_MAP_CELL_WIDTH + MAP_MAP_CELL_WIDTH/4, y * MAP_MAP_CELL_WIDTH + MAP_MAP_CELL_WIDTH/4); // top left
+            glVertex2i(x * MAP_MAP_CELL_WIDTH + MAP_MAP_CELL_WIDTH - MAP_MAP_CELL_WIDTH/4, y * MAP_MAP_CELL_WIDTH + MAP_MAP_CELL_WIDTH/4); // top right 
+            glVertex2i(x * MAP_MAP_CELL_WIDTH + MAP_MAP_CELL_WIDTH - MAP_MAP_CELL_WIDTH/4, y * MAP_MAP_CELL_WIDTH + MAP_MAP_CELL_WIDTH - MAP_MAP_CELL_WIDTH/4); // bottom right
+            glVertex2i(x * MAP_MAP_CELL_WIDTH + MAP_MAP_CELL_WIDTH/4, y * MAP_MAP_CELL_WIDTH + MAP_MAP_CELL_WIDTH - MAP_MAP_CELL_WIDTH/4); // bottom left
+            glEnd();*/
         }
 
         void integrate(long t) {
