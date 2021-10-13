@@ -59,47 +59,47 @@ public:
 
         // HEAD
         glBegin(GL_QUADS); // ROOF
-        glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH);
-        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH / 2, y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH);
-        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH / 2, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH / 2, MAP_CELL_WIDTH);
-        glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH / 2, MAP_CELL_WIDTH);
+        glVertex3i(x * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5) * 2, y * MAP_CELL_WIDTH, MAP_CELL_WIDTH - MAP_CELL_WIDTH / 4);
+        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH - (MAP_CELL_WIDTH / 5) * 2, y * MAP_CELL_WIDTH, MAP_CELL_WIDTH - MAP_CELL_WIDTH / 4);
+        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH - (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH - MAP_CELL_WIDTH / 4);
+        glVertex3i(x * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH - MAP_CELL_WIDTH / 4);
         glEnd();
 
-        /*glBegin(GL_QUADS); // FLOOR
-        glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH / 2);
-        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH / 2, y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH / 2);
-        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH / 2, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH / 2, MAP_CELL_WIDTH / 2);
-        glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH / 2, MAP_CELL_WIDTH / 2);
-        glEnd();*/
+        glBegin(GL_QUADS); // FLOOR
+        glVertex3i(x * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5) * 2, y * MAP_CELL_WIDTH, MAP_CELL_WIDTH / 2);
+        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH - (MAP_CELL_WIDTH / 5) * 2, y * MAP_CELL_WIDTH, MAP_CELL_WIDTH / 2);
+        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH - (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH / 2);
+        glVertex3i(x * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH / 2);
+        glEnd();
 
         //RIGHT
-        /*glBegin(GL_QUADS);
-        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH / 2);
-        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH / 2);
-        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH);
-        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH);
+        glBegin(GL_QUADS);
+        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH - (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH / 2);
+        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH - (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH / 2);
+        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH - (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH - MAP_CELL_WIDTH / 4);
+        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH - (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH - MAP_CELL_WIDTH / 4);
         glEnd();
 
         glBegin(GL_QUADS); // FRONT
-        glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH / 2);
-        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH / 2);
-        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH);
-        glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH);
+        glVertex3i(x * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5), MAP_CELL_WIDTH / 2);
+        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH - (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH / 2);
+        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH - (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH - MAP_CELL_WIDTH / 4);
+        glVertex3i(x * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5), MAP_CELL_WIDTH - MAP_CELL_WIDTH / 4);
         glEnd();
 
         glBegin(GL_QUADS); // LEFT
-        glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH / 2);
-        glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH / 2);
-        glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH), MAP_CELL_WIDTH);
-        glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH);
+        glVertex3i(x * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH / 2);
+        glVertex3i(x * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5), MAP_CELL_WIDTH / 2);
+        glVertex3i(x * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5), MAP_CELL_WIDTH - MAP_CELL_WIDTH / 4);
+        glVertex3i(x * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH - MAP_CELL_WIDTH / 4);
         glEnd();
 
         glBegin(GL_QUADS); // BACK
-        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH / 2);
-        glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH / 2);
-        glVertex3i(x * (MAP_CELL_WIDTH), y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH);
-        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH);
-        glEnd();*/
+        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH - (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH / 2);
+        glVertex3i(x * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH / 2);
+        glVertex3i(x * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH - MAP_CELL_WIDTH / 4);
+        glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH - (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH - MAP_CELL_WIDTH / 4);
+        glEnd();
 
         (id != 0) ? glColor3f(255, 0, 240) : glColor3f(255, 255, 0);
         // BODY
