@@ -41,8 +41,8 @@ int player_speed = 200;
 int enemy_speed = 200;
 
 // Observation
-int anglealpha = 64;//90;
-int anglebeta = -15;//30;
+int anglealpha = 64; //90;
+int anglebeta = -15; //30;
 float zoom = 0.7f;
 
 auto start = std::chrono::system_clock::now();
@@ -598,10 +598,11 @@ void loadGameTextures()
 
 int main(int argc, char *argv[])
 {
-    askDimensions();
+    //askDimensions();
 
     srand(time(NULL)); // Set Seed to geneate random numbers
-
+    input_width = 25;
+    input_height = 25;
     map.create(input_width, input_height); // create map
     map.print();
 
