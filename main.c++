@@ -41,8 +41,8 @@ int player_speed = 200;
 int enemy_speed = 200;
 
 // Observation
-int anglealpha = 90;
-int anglebeta = 30;
+int anglealpha = 64;//90;
+int anglebeta = -15;//30;
 float zoom = 0.7f;
 
 auto start = std::chrono::system_clock::now();
@@ -50,7 +50,6 @@ float maxTimeLeft = 120.0; // seconds
 
 void displayWall(int x, int y)
 {
-
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 2);
     glBegin(GL_QUADS);
@@ -138,7 +137,6 @@ void displayWall(int x, int y)
 
 void displayCorridor(int x, int y)
 {
-
     glBindTexture(GL_TEXTURE_2D, 1);
     glEnable(GL_TEXTURE_2D);
     glBegin(GL_QUADS);
@@ -211,6 +209,7 @@ void printTimeLeft()
     glLoadIdentity();
     glColor3f(1.0f, 0.0f, 0.0f); //needs to be called before RasterPos
     glRasterPos2i(10, 10);
+
     std::string text = "Time: Left " + std::to_string(maxTimeLeft - elapsed_seconds.count()) + " s";
     void *font = GLUT_BITMAP_9_BY_15;
 
@@ -309,8 +308,8 @@ void PositionObserver(float alpha, float beta, int radi)
 
 void display()
 {
-
-    glClearColor(1.0, 1.0, 1.0, 0.0);
+    //glClearColor(1.0, 1.0, 1.0, 0.0); // white background
+    glClearColor(0.0, 0.0, 0.0, 0.0); // black background
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_MODELVIEW);
@@ -329,8 +328,8 @@ void display()
     glPolygonMode(GL_BACK, GL_FILL);
 
     showMap();
-    //player.display();
-    //enemy.display();
+    player.display();
+    enemy.display();
 
     // HUD
     printTimeLeft();
@@ -454,7 +453,6 @@ void moveEnemy()
 
         for (int i = 0; i < 4; i++)
         {
-
             int aux = 0;
             if (enemy.getStatus() == QUIET)
             {
@@ -600,13 +598,11 @@ void loadGameTextures()
 
 int main(int argc, char *argv[])
 {
-
     askDimensions();
 
     srand(time(NULL)); // Set Seed to geneate random numbers
 
     map.create(input_width, input_height); // create map
-
     map.print();
 
     // Init Time Left
