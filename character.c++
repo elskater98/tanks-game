@@ -55,7 +55,7 @@ public:
 
     void display()
     {
-        (id == 0) ? glColor3f(255, 0, 240) : glColor3f(255, 255, 0);
+        (id == 0) ? glColor3f(1, 0, 1) : glColor3f(1, 0, 0);
 
         // HEAD
         glBegin(GL_QUADS); // ROOF
@@ -101,7 +101,7 @@ public:
         glVertex3i(x * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH - (MAP_CELL_WIDTH / 5) * 2, y * (MAP_CELL_WIDTH) + MAP_CELL_WIDTH, MAP_CELL_WIDTH - MAP_CELL_WIDTH / 4);
         glEnd();
 
-        (id != 0) ? glColor3f(255, 0, 240) : glColor3f(255, 255, 0);
+        (id == 0) ? glColor3f(0, 0, 1) : glColor3f(1, 0.5, 0);
         // BODY
         glBegin(GL_QUADS); // ROOF
         glVertex3i(x * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5), y * MAP_CELL_WIDTH + (MAP_CELL_WIDTH / 5), MAP_CELL_WIDTH / 2);

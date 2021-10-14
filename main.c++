@@ -41,12 +41,14 @@ int player_speed = 200;
 int enemy_speed = 200;
 
 // Observation
-int anglealpha = 64; //90;
-int anglebeta = -15; //30;
+int anglealpha = 64;
+int anglebeta = -15; 
 float zoom = 0.7f;
 
 auto start = std::chrono::system_clock::now();
-float maxTimeLeft = 120.0; // seconds
+float maxTimeLeft = 60.0; // seconds
+
+bool DEBUG = FALSE;
 
 void displayWall(int x, int y)
 {
@@ -207,6 +209,7 @@ void printTimeLeft()
     gluOrtho2D(0.0, cell_width * map.width, 0.0, cell_width * map.height);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
     glColor3f(1.0f, 0.0f, 0.0f); //needs to be called before RasterPos
     glRasterPos2i(10, 10);
 
@@ -216,10 +219,9 @@ void printTimeLeft()
     for (std::string::iterator i = text.begin(); i != text.end(); ++i)
     {
         char c = *i;
-        //this does nothing, color is fixed for Bitmaps when calling glRasterPos
-        //glColor3f(1.0, 0.0, 1.0);
         glutBitmapCharacter(font, c);
     }
+
     // https://stackoverflow.com/questions/8956736/glcolor-coloring-all-textures/26526213
     glColor4f(1.f, 1.f, 1.f, 1.f); // unbind the texture
 }
@@ -308,7 +310,6 @@ void PositionObserver(float alpha, float beta, int radi)
 
 void display()
 {
-    //glClearColor(1.0, 1.0, 1.0, 0.0); // white background
     glClearColor(0.0, 0.0, 0.0, 0.0); // black background
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -543,11 +544,10 @@ void readJPEG(char *filename, unsigned char **image, int *width, int *height)
 
 void LoadTexture(char *filename, int dim)
 {
-    unsigned char *buffer;
-    unsigned char *buffer2;
+    // https://github.com/hatsyio/Pacman_CPP
+    unsigned char *buffer, *buffer2;
     int width, height;
-    long i, j;
-    long k, h;
+    long i, j, k, h;
 
     readJPEG(filename, &buffer, &width, &height);
 
@@ -555,6 +555,7 @@ void LoadTexture(char *filename, int dim)
 
     //-- The texture pattern is subsampled so that its dimensions become dim x dim --
     for (i = 0; i < dim; i++)
+    {
         for (j = 0; j < dim; j++)
         {
             k = i * height / dim;
@@ -564,15 +565,18 @@ void LoadTexture(char *filename, int dim)
             buffer2[3 * (i * dim + j) + 1] = buffer[3 * (k * width + h) + 1];
             buffer2[3 * (i * dim + j) + 2] = buffer[3 * (k * width + h) + 2];
         }
+    }
+
+    free(buffer);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, dim, dim, 0, GL_RGB, GL_UNSIGNED_BYTE, buffer2);
 
-    free(buffer);
     free(buffer2);
 }
+
 void loadGameTextures()
 {
     //wall
@@ -598,11 +602,18 @@ void loadGameTextures()
 
 int main(int argc, char *argv[])
 {
-    //askDimensions();
+    if (DEBUG)
+    {
+        input_width = 25;
+        input_height = 25;
+    }
+    else
+    {
+        askDimensions();
+    }
 
     srand(time(NULL)); // Set Seed to geneate random numbers
-    input_width = 25;
-    input_height = 25;
+
     map.create(input_width, input_height); // create map
     map.print();
 
