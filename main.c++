@@ -50,8 +50,7 @@ float maxTimeLeft = 60.0; // seconds
 
 bool DEBUG = FALSE;
 
-void displayWall(int x, int y)
-{
+void displayWall(int x, int y) {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 2);
     glBegin(GL_QUADS);
@@ -137,8 +136,7 @@ void displayWall(int x, int y)
     glDisable(GL_TEXTURE_2D);
 }
 
-void displayCorridor(int x, int y)
-{
+void displayCorridor(int x, int y) {
     glBindTexture(GL_TEXTURE_2D, 1);
     glEnable(GL_TEXTURE_2D);
     glBegin(GL_QUADS);
@@ -154,8 +152,7 @@ void displayCorridor(int x, int y)
     glDisable(GL_TEXTURE_2D);
 }
 
-void displayInitialPlayer(int x, int y)
-{
+void displayInitialPlayer(int x, int y) {
     glBindTexture(GL_TEXTURE_2D, 3);
     glEnable(GL_TEXTURE_2D);
     glBegin(GL_QUADS);
@@ -171,8 +168,7 @@ void displayInitialPlayer(int x, int y)
     glDisable(GL_TEXTURE_2D);
 }
 
-void displayInitialEnemy(int x, int y)
-{
+void displayInitialEnemy(int x, int y) {
     glBindTexture(GL_TEXTURE_2D, 4);
     glEnable(GL_TEXTURE_2D);
     glBegin(GL_QUADS);
@@ -188,8 +184,7 @@ void displayInitialEnemy(int x, int y)
     glDisable(GL_TEXTURE_2D);
 }
 
-void printTimeLeft()
-{
+void printTimeLeft() {
 
     //https://stackoverflow.com/questions/18847109/displaying-fixed-location-2d-text-in-a-3d-opengl-world-using-glut/21923064
     auto end = std::chrono::system_clock::now();
@@ -197,8 +192,7 @@ void printTimeLeft()
     std::chrono::duration<double> elapsed_seconds = end - start;
 
     // Time Left Exceeded
-    if (maxTimeLeft - elapsed_seconds.count() < 0)
-    {
+    if (maxTimeLeft - elapsed_seconds.count() < 0) {
         exit(0);
     }
 
@@ -308,24 +302,24 @@ void PositionObserver(float alpha, float beta, int radi)
     gluLookAt(x, y, z, (map.width * cell_width) / 2, (map.height * cell_width) / 2, cell_width, upx, upy, upz);
 }
 
-void display()
-{
+void display() {
     glClearColor(0.0, 0.0, 0.0, 0.0); // black background
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    // glMatrixMode => specify which matrix is the current matrix
+    glMatrixMode(GL_MODELVIEW); // applies subsequent matrix operations to the modelview matrix
+    glLoadIdentity(); // reset the matrix to identity
 
     PositionObserver(anglealpha, anglebeta, 600);
 
-    glMatrixMode(GL_PROJECTION);
+    glMatrixMode(GL_PROJECTION); // applies subsequent matrix operations to the projection matrix stack
     glLoadIdentity();
 
     glOrtho(-cell_width * map.width * zoom, cell_width * map.width * zoom, -cell_width * map.height * zoom, cell_width * map.height * zoom, 10, 2000);
 
     glMatrixMode(GL_MODELVIEW);
 
-    glPolygonMode(GL_FRONT, GL_FILL);
+    glPolygonMode(GL_FRONT, GL_FILL); // set polygon drawing mode so that it only fills the polygons that are facing towards the observer
     glPolygonMode(GL_BACK, GL_FILL);
 
     showMap();
@@ -339,10 +333,9 @@ void display()
     glutPostRedisplay();
 }
 
-void askDimensions()
-{
+void askDimensions() {
     // Ask map dimensions
-    cout << "[Instructions]: Width and height must be ODD.\n";
+    cout << "[Instructions]: Width and height must be ODD." << endl;
 
     cout << "Enter width: ";
     cin >> input_width;
@@ -350,84 +343,77 @@ void askDimensions()
     cout << "Enter height: ";
     cin >> input_height;
 
-    cout << "[INFO] Generating " << input_width << "x" << input_height;
+    cout << "[INFO] Generating " << input_width << "x" << input_height << "..." << endl;
 }
 
-void keyboard(unsigned char c, int x, int y)
-{
+void keyboard(unsigned char c, int x, int y) {
 
-    switch (c)
-    {
-    // Player Keys
-    case 'w':
-        if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() + 1) && !charactersEnemyCollision(player.getX(), player.getY() + 1))
-        {
-            player.init_movement(player.getX(), player.getY() + 1, player_speed);
-        }
-        break;
-    case 's':
-        if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() - 1) && !charactersEnemyCollision(player.getX(), player.getY() - 1))
-        {
-            player.init_movement(player.getX(), player.getY() - 1, player_speed);
-        }
-        break;
-    case 'a':
-        if (player.getStatus() == QUIET && !isWall(player.getX() - 1, player.getY()) && !charactersEnemyCollision(player.getX() - 1, player.getY()))
-        {
-            player.init_movement(player.getX() - 1, player.getY(), player_speed);
-        }
-        break;
-    case 'd':
-        if (player.getStatus() == QUIET && !isWall(player.getX() + 1, player.getY()) && !charactersEnemyCollision(player.getX() + 1, player.getY()))
-        {
-            player.init_movement(player.getX() + 1, player.getY(), player_speed);
-        }
-        break;
+    switch (c) {
+        // Player Keys
+        case 'w':
+            if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() + 1) && !charactersEnemyCollision(player.getX(), player.getY() + 1))
+            {
+                player.init_movement(player.getX(), player.getY() + 1, player_speed);
+            }
+            break;
+        case 's':
+            if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() - 1) && !charactersEnemyCollision(player.getX(), player.getY() - 1))
+            {
+                player.init_movement(player.getX(), player.getY() - 1, player_speed);
+            }
+            break;
+        case 'a':
+            if (player.getStatus() == QUIET && !isWall(player.getX() - 1, player.getY()) && !charactersEnemyCollision(player.getX() - 1, player.getY()))
+            {
+                player.init_movement(player.getX() - 1, player.getY(), player_speed);
+            }
+            break;
+        case 'd':
+            if (player.getStatus() == QUIET && !isWall(player.getX() + 1, player.getY()) && !charactersEnemyCollision(player.getX() + 1, player.getY()))
+            {
+                player.init_movement(player.getX() + 1, player.getY(), player_speed);
+            }
+            break;
 
-    // Reset Map
-    case 'r':
-        map.create(input_width, input_height);
-        player.init(0, 1, map.height - 2);
-        enemy.init(1, map.width - 2, 1);
-        start = std::chrono::system_clock::now();
-        break;
+        // Reset Map
+        case 'r':
+            map.create(input_width, input_height);
+            player.init(0, 1, map.height - 2);
+            enemy.init(1, map.width - 2, 1);
+            start = std::chrono::system_clock::now();
+            break;
 
-    // Camera Keys
-    case 'i':
-        if (anglebeta <= (90 - 4))
-        {
-            anglebeta = (anglebeta + 3);
-        }
-        break;
-    case 'k':
-        if (anglebeta >= (-90 + 4))
-        {
-            anglebeta = anglebeta - 3;
-        }
-        break;
-    case 'j':
-        anglealpha = (anglealpha + 3) % 360;
-        break;
-    case 'l':
-        anglealpha = (anglealpha - 3 + 360) % 360;
-        break;
-    default:
-        break;
+        // Camera Keys
+        case 'i':
+            if (anglebeta <= (90 - 4)) {
+                anglebeta = (anglebeta + 3);
+            }
+            break;
+        case 'k':
+            if (anglebeta >= (-90 + 4)) {
+                anglebeta = anglebeta - 3;
+            }
+            break;
+        case 'j':
+            anglealpha = (anglealpha + 3) % 360;
+            break;
+        case 'l':
+            anglealpha = (anglealpha - 3 + 360) % 360;
+            break;
+        default:
+            break;
     }
 
     glutPostRedisplay();
 };
 
-void idle()
-{
+void idle() {
     long t = glutGet(GLUT_ELAPSED_TIME);
 
-    if (last_t == 0)
-    {
+    if (last_t == 0) {
         last_t = t;
     }
-    else
-    {
+    else {
         player.integrate(t - last_t);
         enemy.integrate(t - last_t);
         last_t = t;
@@ -436,68 +422,59 @@ void idle()
     glutPostRedisplay();
 }
 
-void moveEnemy()
-{
-    while (true)
-    {
+void moveEnemy() {
+    while (true) {
         float d = rand() % 10;
         int direction[4] = {UP, RIGHT, LEFT, DOWN};
-        ;
 
-        if (d < 5)
-        {
+        if (d < 5) {
             direction[1] = UP;
             direction[3] = LEFT;
         }
 
         std::random_shuffle(direction, direction + (sizeof(direction) / sizeof(direction[0])));
 
-        for (int i = 0; i < 4; i++)
-        {
+        for (int i = 0; i < 4; i++) {
             int aux = 0;
-            if (enemy.getStatus() == QUIET)
-            {
-                switch (direction[i])
-                {
-                case UP:
-                    if (!isWall(enemy.getX(), enemy.getY() + 1) && !charactersPlayerCollision(enemy.getX(), enemy.getY() + 1))
-                    {
-                        enemy.init_movement(enemy.getX(), enemy.getY() + 1, enemy_speed);
-                    }
-                    break;
-                case DOWN:
-                    if (!isWall(enemy.getX(), enemy.getY() - 1) && !charactersPlayerCollision(enemy.getX(), enemy.getY() - 1))
-                    {
-                        enemy.init_movement(enemy.getX(), enemy.getY() - 1, enemy_speed);
-                    }
-                    break;
-                case LEFT:
-                    if (!isWall(enemy.getX() - 1, enemy.getY()) && !charactersPlayerCollision(enemy.getX() - 1, enemy.getY()))
-                    {
-                        enemy.init_movement(enemy.getX() - 1, enemy.getY(), enemy_speed);
-                    }
-                    break;
-                case RIGHT:
-                    if (!isWall(enemy.getX() + 1, enemy.getY()) && !charactersPlayerCollision(enemy.getX() + 1, enemy.getY()))
-                    {
-                        enemy.init_movement(enemy.getX() + 1, enemy.getY(), enemy_speed);
-                    }
-                    break;
+            if (enemy.getStatus() == QUIET) {
+                switch (direction[i]) {
+                    case UP:
+                        if (!isWall(enemy.getX(), enemy.getY() + 1) && !charactersPlayerCollision(enemy.getX(), enemy.getY() + 1))
+                        {
+                            enemy.init_movement(enemy.getX(), enemy.getY() + 1, enemy_speed);
+                        }
+                        break;
+                    case DOWN:
+                        if (!isWall(enemy.getX(), enemy.getY() - 1) && !charactersPlayerCollision(enemy.getX(), enemy.getY() - 1))
+                        {
+                            enemy.init_movement(enemy.getX(), enemy.getY() - 1, enemy_speed);
+                        }
+                        break;
+                    case LEFT:
+                        if (!isWall(enemy.getX() - 1, enemy.getY()) && !charactersPlayerCollision(enemy.getX() - 1, enemy.getY()))
+                        {
+                            enemy.init_movement(enemy.getX() - 1, enemy.getY(), enemy_speed);
+                        }
+                        break;
+                    case RIGHT:
+                        if (!isWall(enemy.getX() + 1, enemy.getY()) && !charactersPlayerCollision(enemy.getX() + 1, enemy.getY()))
+                        {
+                            enemy.init_movement(enemy.getX() + 1, enemy.getY(), enemy_speed);
+                        }
+                        break;
                 }
             }
 
             usleep(200000);
             // END GAME https://www.youtube.com/watch?v=dE1P4zDhhqw
-            if ((enemy.getX() == 1 && enemy.getY() == map.height - 2) || (player.getX() == map.width - 2 && player.getY() == 1))
-            {
+            if ((enemy.getX() == 1 && enemy.getY() == map.height - 2) || (player.getX() == map.width - 2 && player.getY() == 1)) {
                 exit(0);
             }
         }
     }
 }
 
-void readJPEG(char *filename, unsigned char **image, int *width, int *height)
-{
+void readJPEG(char *filename, unsigned char **image, int *width, int *height) {
     struct jpeg_decompress_struct cinfo;
     struct jpeg_error_mgr jerr;
     FILE *infile;
@@ -507,8 +484,7 @@ void readJPEG(char *filename, unsigned char **image, int *width, int *height)
     cinfo.err = jpeg_std_error(&jerr);
     jpeg_create_decompress(&cinfo);
 
-    if ((infile = fopen(filename, "rb")) == NULL)
-    {
+    if ((infile = fopen(filename, "rb")) == NULL) {
         printf("Unable to open file %s\n", filename);
         exit(1);
     }
@@ -527,8 +503,7 @@ void readJPEG(char *filename, unsigned char **image, int *width, int *height)
     buffer[0] = (unsigned char *)malloc(cinfo.output_width * cinfo.output_components);
 
     i = 0;
-    while (cinfo.output_scanline < cinfo.output_height)
-    {
+    while (cinfo.output_scanline < cinfo.output_height) {
         jpeg_read_scanlines(&cinfo, buffer, 1);
 
         for (j = 0; j < cinfo.output_width * cinfo.output_components; j++)
@@ -542,8 +517,7 @@ void readJPEG(char *filename, unsigned char **image, int *width, int *height)
     jpeg_finish_decompress(&cinfo);
 }
 
-void LoadTexture(char *filename, int dim)
-{
+void LoadTexture(char *filename, int dim) {
     // https://github.com/hatsyio/Pacman_CPP
     unsigned char *buffer, *buffer2;
     int width, height;
@@ -554,10 +528,8 @@ void LoadTexture(char *filename, int dim)
     buffer2 = (unsigned char *)malloc(dim * dim * 3);
 
     //-- The texture pattern is subsampled so that its dimensions become dim x dim --
-    for (i = 0; i < dim; i++)
-    {
-        for (j = 0; j < dim; j++)
-        {
+    for (i = 0; i < dim; i++) {
+        for (j = 0; j < dim; j++) {
             k = i * height / dim;
             h = j * width / dim;
 
@@ -577,38 +549,34 @@ void LoadTexture(char *filename, int dim)
     free(buffer2);
 }
 
-void loadGameTextures()
-{
+void loadGameTextures() {
     //wall
     glBindTexture(GL_TEXTURE_2D, 0);
-    LoadTexture((char *)"textures/wall.jpg", 64);
+    LoadTexture((char *) "textures/wall.jpg", 64);
 
     // roof
     glBindTexture(GL_TEXTURE_2D, 1);
-    LoadTexture((char *)"textures/roof.jpg", 64);
+    LoadTexture((char *) "textures/roof.jpg", 64);
 
     // path
     glBindTexture(GL_TEXTURE_2D, 2);
-    LoadTexture((char *)"textures/floor.jpg", 64);
+    LoadTexture((char *) "textures/floor.jpg", 64);
 
     // water
     glBindTexture(GL_TEXTURE_2D, 3);
-    LoadTexture((char *)"textures/water.jpg", 64);
+    LoadTexture((char *) "textures/water.jpg", 64);
 
     // path
     glBindTexture(GL_TEXTURE_2D, 4);
-    LoadTexture((char *)"textures/lava.jpg", 64);
+    LoadTexture((char *) "textures/lava.jpg", 64);
 }
 
-int main(int argc, char *argv[])
-{
-    if (DEBUG)
-    {
+int main(int argc, char *argv[]) {
+    if (DEBUG) {
         input_width = 25;
         input_height = 25;
     }
-    else
-    {
+    else {
         askDimensions();
     }
 
@@ -645,5 +613,5 @@ int main(int argc, char *argv[])
 
     glutMainLoop();
 
-    exit(0);
+    return 0;
 }

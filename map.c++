@@ -26,7 +26,6 @@ using namespace std;
 
 class Map {
     public:
-
         int width, height;
         char *array2D; // https://stackoverflow.com/questions/936687/how-do-i-declare-a-2d-array-in-c-using-new
 
@@ -37,22 +36,12 @@ class Map {
             array2D = new char [(int) width * (int) height];
 
             initWalls();
-            recursiveAlgorithm(1,1);
+            recursiveAlgorithm(1, 1);
             removeMazeWalls();
         }
 
-        void print() {
-            cout << "Rows:" <<  width << " Columns:" << height << "\n\n";
-            for(int i = 0; i < width; i++) {
-                for(int j = 0; j < height; j++) {
-                    cout << array2D[getPosition(i, j)] << " "; // horizontal Print
-                }
-                cout << "\n";
-            }
-        }
-
+        // obtain the position representated with a single dimension (X*Y) using two-dimensional axis (X,Y).[1,2,3,4,5,6] = [[1,2],[3,4],[5,6]] 
         int getPosition(int x, int y) {
-            // Obtain the position representated with single dimension (X*Y) using two-dimensional axis (X,Y).[1,2,3,4,5,6] = [[1,2],[3,4],[5,6]] 
             return x + y * width;
         }
 
@@ -64,9 +53,22 @@ class Map {
             return CORRIDOR_SYMBOL;
         }
 
-    // private class methods
-    private:
+        // check if a specific position (x, y) is bounded or not
+        bool isBound (int x, int y) {
+            return !(x < 0 || y < 0 || x >= width || y >= height);
+        }
 
+        void print() {
+            cout << "Rows: " <<  width << " Columns: " << height << endl;
+            for(int i = 0; i < width; i++) {
+                for(int j = 0; j < height; j++) {
+                    cout << array2D[getPosition(i, j)] << " "; // horizontal print
+                }
+                cout << endl;
+            }
+        }
+
+    private:
         char WALL_SYMBOL = '#';
         char CORRIDOR_SYMBOL = ' ';
 
@@ -89,7 +91,6 @@ class Map {
             // Loop to attempt to visit that direction
             for (int i = 0; i < 4; i++) {
 
-                //Initialize aux variables
                 int dx = 0, dy = 0;
 
                 switch (direction[i]) {
@@ -101,10 +102,6 @@ class Map {
 
                 generatePath(x + dx*2, y + dy*2, dx, dy);
             }
-        }
-
-        int isBound (int x, int y) {
-            return !(x < 0 || y < 0 || x >= width  || y >= height);
         }
 
         void generatePath(int x, int y, int dx, int dy) {
@@ -176,9 +173,6 @@ class Map {
 
         // https://github.com/keesiemeijer/maze-generator
         void removeMazeWalls() {
-            /*if (!this.removeWalls || !this.matrix.length) {
-                return;
-            }*/
 
             int min = 0;
             int max = height-1;
