@@ -21,6 +21,7 @@ private:
     float status;
     long time_remaining;
     int id;
+    float rotation;
 
     float dest_x, dest_y;
 
@@ -51,12 +52,13 @@ public:
         id = _id;
         status = QUIET;
         setPosition(x, y);
+        //rotation = 90;
     }
 
     void display()
     {
         (id == 0) ? glColor3f(1, 0, 1) : glColor3f(1, 0, 0);
-
+        glRotatef(45,0,0,1); 
         // HEAD
         glBegin(GL_QUADS); // ROOF
         glVertex3i(x * (MAP_CELL_WIDTH) + (MAP_CELL_WIDTH / 5) * 2, y * MAP_CELL_WIDTH, MAP_CELL_WIDTH - MAP_CELL_WIDTH / 4);
