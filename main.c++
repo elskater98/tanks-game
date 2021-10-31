@@ -394,16 +394,18 @@ void keyboard(unsigned char c, int x, int y)
 
     // Camera Keys
     case 'i':
-        if (anglebeta <= (90 - 4))
+        anglebeta = (anglebeta + 3);
+        /*if (anglebeta <= (90 - 4))
         {
             anglebeta = (anglebeta + 3);
-        }
+        }*/
         break;
     case 'k':
-        if (anglebeta >= (-90 + 4))
+        anglebeta = anglebeta - 3;
+        /*if (anglebeta >= (-90 + 4))
         {
             anglebeta = anglebeta - 3;
-        }
+        }*/
         break;
     case 'j':
         anglealpha = (anglealpha + 3) % 360;
