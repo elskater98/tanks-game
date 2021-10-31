@@ -12,6 +12,12 @@ using namespace std;
 #define MOVE 1
 #define QUIET 2
 
+// Character orientation/direction
+#define UP 0
+#define RIGHT 1
+#define DOWN 2
+#define LEFT 3
+
 #define MAP_CELL_WIDTH 25
 
 class Character
@@ -57,21 +63,17 @@ public:
     }
 
     void display() {
-        int size_x = 20;
-        int size_y = 20;
+        int size = 25;
 
         glPushMatrix();
-        glTranslatef(x, y, 0);
-        glTranslatef(size_x / 2, size_y / 2, 0);
-        glTranslatef(-size_x / 2, -size_y / 2, 0);
-        glPushMatrix();
-        drawBase(20,20,20, colors);
+        glTranslatef(x * MAP_CELL_WIDTH, y * MAP_CELL_WIDTH, 0);
+        //glTranslatef(size_x / 2, size_y / 2, 0);
+        //glTranslatef(-size_x / 2, -size_y / 2, 0);
+        //drawWheels(size, size, size);
+        drawBase(size, size, size, colors);
+        drawCavin(size, size, size, colors);
+        drawCannon(size, size, size);
         glPopMatrix();
-        glPopMatrix();
-
-        //drawBase(20,20,20, colors);
-        //drawCavin();
-        //drawCannon();
     }
 
     void drawBase(int size_x, int size_y, int size_z, float color[3]){
@@ -194,7 +196,42 @@ public:
 
     }
 
-    
+    void drawWheels(int size_x, int size_y, int size_z){
+        int radius = size_x/6;
+        GLUquadricObj *quadratic;
+
+        glPushMatrix();
+        glTranslatef(size_x/4, size_y / 6, radius);
+        glColor3f(0,0,0);
+        quadratic = gluNewQuadric();
+        gluSphere(quadratic,radius,32,32);
+        glEnd();
+        glPopMatrix();
+
+        glPushMatrix();
+        glTranslatef(3*size_x/4, size_y / 6, radius);
+        glColor3f(0,0,0);
+        quadratic = gluNewQuadric();
+        gluSphere(quadratic,radius,32,32);
+        glEnd();
+        glPopMatrix();
+
+        glPushMatrix();
+        glTranslatef(size_x/4, 5 * size_y / 6, radius);
+        glColor3f(0,0,0);
+        quadratic = gluNewQuadric();
+        gluSphere(quadratic,radius,32,32);
+        glEnd();
+        glPopMatrix();
+
+        glPushMatrix();
+        glTranslatef(3*size_x/4,5 * size_y / 6, radius);
+        glColor3f(0,0,0);
+        quadratic = gluNewQuadric();
+        gluSphere(quadratic,radius,32,32);
+        glEnd();
+        glPopMatrix();
+    }
 
     void displayOld()
     {
