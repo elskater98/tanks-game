@@ -28,14 +28,19 @@ private:
     long time_remaining;
     int id;
     float rotation;
+    float orientation;
     float colors[3] = {0, 0, 1};
 
-    float dest_x, dest_y;
+    float dest_x, dest_y, dest_orientation;
 
     void setPosition(float x, float y)
     {
         this->x = x;
         this->y = y;
+    }
+
+    void setOrientation(float orientation) {
+        this->orientation = orientation;
     }
 
 public:
@@ -54,11 +59,12 @@ public:
         return this->status;
     }
 
-    void init(int _id, float x, float y)
+    void init(int _id, float x, float y, float orientation)
     {
         id = _id;
         status = QUIET;
         setPosition(x, y);
+        setOrientation(orientation);
         //rotation = 90;
     }
 
@@ -67,8 +73,9 @@ public:
 
         glPushMatrix();
         glTranslatef(x * MAP_CELL_WIDTH, y * MAP_CELL_WIDTH, 0);
-        //glTranslatef(size_x / 2, size_y / 2, 0);
-        //glTranslatef(-size_x / 2, -size_y / 2, 0);
+        glTranslatef(size / 2, size / 2, 0);
+        glRotatef(orientation, 0, 0, 1);
+        glTranslatef(-size / 2, -size / 2, 0);
         //drawWheels(size, size, size);
         drawBase(size, size, size, colors);
         drawCavin(size, size, size, colors);
@@ -233,7 +240,7 @@ public:
         glPopMatrix();
     }
 
-    void displayOld()
+    /*void displayOld()
     {
         (id == 0) ? glColor3f(1, 0, 1) : glColor3f(1, 0, 0);
 
@@ -331,7 +338,7 @@ public:
         glEnd();
         glPopMatrix();
         glColor4f(1.f, 1.f, 1.f, 1.f);
-    }
+    }*/
 
     void integrate(long t)
     {
@@ -349,14 +356,15 @@ public:
         }
     }
 
-    void init_movement(float destination_x, float destination_y, float duration)
+    void init_movement(float destination_x, float destination_y, float dest_orientation, float duration)
     {
         vx = (destination_x - x) / duration;
         vy = (destination_y - y) / duration;
         status = MOVE;
         time_remaining = duration;
 
-        dest_x = destination_x;
-        dest_y = destination_y;
+        this->dest_x = destination_x;
+        this->dest_y = destination_y;
+        this->dest_orientation = dest_orientation;
     }
 };
