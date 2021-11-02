@@ -362,33 +362,33 @@ void keyboard(unsigned char c, int x, int y)
     case 'w':
         if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() + 1) && !charactersEnemyCollision(player.getX(), player.getY() + 1))
         {
-            player.init_movement(player.getX(), player.getY() + 1, player_speed);
+            player.init_movement(player.getX(), player.getY() + 1, UP, player_speed);
         }
         break;
     case 's':
         if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() - 1) && !charactersEnemyCollision(player.getX(), player.getY() - 1))
         {
-            player.init_movement(player.getX(), player.getY() - 1, player_speed);
+            player.init_movement(player.getX(), player.getY() - 1, DOWN, player_speed);
         }
         break;
     case 'a':
         if (player.getStatus() == QUIET && !isWall(player.getX() - 1, player.getY()) && !charactersEnemyCollision(player.getX() - 1, player.getY()))
         {
-            player.init_movement(player.getX() - 1, player.getY(), player_speed);
+            player.init_movement(player.getX() - 1, player.getY(), LEFT, player_speed);
         }
         break;
     case 'd':
         if (player.getStatus() == QUIET && !isWall(player.getX() + 1, player.getY()) && !charactersEnemyCollision(player.getX() + 1, player.getY()))
         {
-            player.init_movement(player.getX() + 1, player.getY(), player_speed);
+            player.init_movement(player.getX() + 1, player.getY(), RIGHT, player_speed);
         }
         break;
 
     // Reset Map
     case 'r':
         map.create(input_width, input_height);
-        player.init(0, 1, map.height - 2);
-        enemy.init(1, map.width - 2, 1);
+        player.init(0, 1, map.height - 2, RIGHT);
+        enemy.init(1, map.width - 2, 1, LEFT);
         start = std::chrono::system_clock::now();
         break;
 
@@ -464,25 +464,25 @@ void moveEnemy()
                 case UP:
                     if (!isWall(enemy.getX(), enemy.getY() + 1) && !charactersPlayerCollision(enemy.getX(), enemy.getY() + 1))
                     {
-                        enemy.init_movement(enemy.getX(), enemy.getY() + 1, enemy_speed);
+                        enemy.init_movement(enemy.getX(), enemy.getY() + 1, UP, enemy_speed);
                     }
                     break;
                 case DOWN:
                     if (!isWall(enemy.getX(), enemy.getY() - 1) && !charactersPlayerCollision(enemy.getX(), enemy.getY() - 1))
                     {
-                        enemy.init_movement(enemy.getX(), enemy.getY() - 1, enemy_speed);
+                        enemy.init_movement(enemy.getX(), enemy.getY() - 1, DOWN, enemy_speed);
                     }
                     break;
                 case LEFT:
                     if (!isWall(enemy.getX() - 1, enemy.getY()) && !charactersPlayerCollision(enemy.getX() - 1, enemy.getY()))
                     {
-                        enemy.init_movement(enemy.getX() - 1, enemy.getY(), enemy_speed);
+                        enemy.init_movement(enemy.getX() - 1, enemy.getY(), LEFT, enemy_speed);
                     }
                     break;
                 case RIGHT:
                     if (!isWall(enemy.getX() + 1, enemy.getY()) && !charactersPlayerCollision(enemy.getX() + 1, enemy.getY()))
                     {
-                        enemy.init_movement(enemy.getX() + 1, enemy.getY(), enemy_speed);
+                        enemy.init_movement(enemy.getX() + 1, enemy.getY(), RIGHT,enemy_speed);
                     }
                     break;
                 }
@@ -623,10 +623,10 @@ int main(int argc, char *argv[])
     start = std::chrono::system_clock::now();
 
     // Create Player
-    player.init(0, 1, map.height - 2);
+    player.init(0, 1, map.height - 2, RIGHT);
 
     // Create Enemy
-    enemy.init(1, map.width - 2, 1);
+    enemy.init(1, map.width - 2, 1, LEFT);
     thread t1(moveEnemy);
 
     // Set window
