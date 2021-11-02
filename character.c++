@@ -11,6 +11,7 @@ using namespace std;
 // Character status
 #define MOVE 1
 #define QUIET 2
+#define ROTATE 3
 
 // Character orientation/direction
 #define UP 0
@@ -23,13 +24,14 @@ using namespace std;
 class Character
 {
 private:
-    float x, y, vx, vy;
+    float x, y, vx, vy, v_rotation;
     float status;
-    long time_remaining;
+    long time_remaining, time_remaining_rotation;
     int id;
     float rotation;
     float orientation;
     float colors[3] = {0, 0, 1};
+    float currentDegree;
 
     float dest_x, dest_y, dest_orientation;
 
@@ -65,6 +67,7 @@ public:
         status = QUIET;
         setPosition(x, y);
         setOrientation(orientation);
+        currentDegree = getDegree(orientation);
         //rotation = 90;
     }
 
@@ -74,7 +77,7 @@ public:
         glPushMatrix();
         glTranslatef(x * MAP_CELL_WIDTH, y * MAP_CELL_WIDTH, 0);
         glTranslatef(size / 2, size / 2, 0);
-        glRotatef(orientation, 0, 0, 1);
+        glRotatef(currentDegree, 0, 0, 1);
         glTranslatef(-size / 2, -size / 2, 0);
         //drawWheels(size, size, size);
         drawBase(size, size, size, colors);
@@ -340,10 +343,38 @@ public:
         glColor4f(1.f, 1.f, 1.f, 1.f);
     }*/
 
+    int getDegree(int value) {
+        int degree = 0;
+        switch (value) {
+            case UP:
+                degree = 90;
+                break;
+            case DOWN:
+                degree = 270;
+                break;
+            case LEFT:
+                degree = 180;
+                break;
+            case RIGHT:
+                degree = 0;
+                break;
+        }
+        return degree;
+    }
+
     void integrate(long t)
     {
-        if (status == MOVE && t < time_remaining)
-        {
+        if (status == ROTATE && t < this->time_remaining_rotation) {
+            currentDegree = fmod(currentDegree + v_rotation * t, 360);
+            time_remaining_rotation -= t;
+        }
+        else if (status = ROTATE && t >= time_remaining_rotation) {
+            currentDegree = getDegree(dest_orientation);
+            status = MOVE;
+        }
+        else if (status == MOVE && t < this->time_remaining)
+        {   
+            // modifying the position components (x, y)
             x = x + vx * t;
             y = y + vy * t;
             time_remaining -= t;
@@ -357,14 +388,49 @@ public:
     }
 
     void init_movement(float destination_x, float destination_y, float dest_orientation, float duration)
-    {
+    { 
+        // MOVEMENT
         vx = (destination_x - x) / duration;
         vy = (destination_y - y) / duration;
         status = MOVE;
-        time_remaining = duration;
+        this->time_remaining = duration;
 
         this->dest_x = destination_x;
         this->dest_y = destination_y;
-        this->dest_orientation = dest_orientation;
+
+        // ROTATION
+        if (orientation != dest_orientation) {
+            
+            int dest_degree = getDegree(dest_orientation);
+            int src_degree = getDegree(orientation);
+
+            int diff = abs(dest_degree - src_degree) % 180;
+
+            if (dest_degree > src_degree) {
+                
+            }
+
+            v_rotation = diff / duration;
+            status = ROTATE;
+            this->time_remaining_rotation = duration;
+
+            this->dest_orientation = dest_orientation;
+
+            this->currentDegree = getDegree(orientation);
+            /*switch ((int) dest_orientation) {
+                case UP:
+                    orientation = 90;
+                    break;
+                case DOWN:
+                    orientation = 270;
+                    break;
+                case LEFT:
+                    orientation = 180;
+                    break;
+                case RIGHT:
+                    orientation = 0;
+                    break;
+            };*/
+        }
     }
 };
