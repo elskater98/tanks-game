@@ -70,8 +70,8 @@ public:
         //currentDegree = getDegree(orientation);
         //rotation = 90;
 
-        this->orientation = DOWN;
-        this->currentDegree = -90;
+        this->orientation = RIGHT;
+        this->currentDegree = 0;
     }
 
     void display() {
@@ -409,35 +409,25 @@ public:
             int dest_degree = getDegree(dest_orientation);
             int src_degree = getDegree(orientation);
 
-            /*int diff = abs(dest_degree - src_degree) % 180;
+            int diff = dest_degree - src_degree;
 
-            if (dest_degree > src_degree) {
-                
+            if (abs(diff) == 270) {
+                if (diff >= 0) {
+                    diff = -90;
+                } else {
+                    diff = 90;
+                }
             }
 
-            v_rotation = diff / duration;*/
+            /*v_rotation = diff / duration;*/
 
-            v_rotation = (dest_degree - src_degree) / duration;
+            v_rotation = diff / duration;
             status = ROTATE;
             this->time_remaining_rotation = duration;
 
             this->dest_orientation = dest_orientation;
 
             this->currentDegree = getDegree(orientation);
-            /*switch ((int) dest_orientation) {
-                case UP:
-                    orientation = 90;
-                    break;
-                case DOWN:
-                    orientation = 270;
-                    break;
-                case LEFT:
-                    orientation = 180;
-                    break;
-                case RIGHT:
-                    orientation = 0;
-                    break;
-            };*/
         }
     }
 };

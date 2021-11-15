@@ -360,25 +360,25 @@ void keyboard(unsigned char c, int x, int y)
     {
     // Player Keys
     case 'w':
-        if (player.getStatus() == QUIET /*&& !isWall(player.getX(), player.getY() + 1)*/ && !charactersEnemyCollision(player.getX(), player.getY() + 1))
+        if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() + 1) && !charactersEnemyCollision(player.getX(), player.getY() + 1))
         {
             player.init_movement(player.getX(), player.getY() + 1, UP, player_speed);
         }
         break;
     case 's':
-        if (player.getStatus() == QUIET /*&& !isWall(player.getX(), player.getY() - 1)*/ && !charactersEnemyCollision(player.getX(), player.getY() - 1))
+        if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() - 1) && !charactersEnemyCollision(player.getX(), player.getY() - 1))
         {
             player.init_movement(player.getX(), player.getY() - 1, DOWN, player_speed);
         }
         break;
     case 'a':
-        if (player.getStatus() == QUIET /*&& !isWall(player.getX() - 1, player.getY())*/ && !charactersEnemyCollision(player.getX() - 1, player.getY()))
+        if (player.getStatus() == QUIET && !isWall(player.getX() - 1, player.getY()) && !charactersEnemyCollision(player.getX() - 1, player.getY()))
         {
             player.init_movement(player.getX() - 1, player.getY(), LEFT, player_speed);
         }
         break;
     case 'd':
-        if (player.getStatus() == QUIET /*&& !isWall(player.getX() + 1, player.getY())*/ && !charactersEnemyCollision(player.getX() + 1, player.getY()))
+        if (player.getStatus() == QUIET && !isWall(player.getX() + 1, player.getY()) && !charactersEnemyCollision(player.getX() + 1, player.getY()))
         {
             player.init_movement(player.getX() + 1, player.getY(), RIGHT, player_speed);
         }
