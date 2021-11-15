@@ -46,7 +46,7 @@ int anglebeta = -15;
 float zoom = 0.7f;
 
 auto start = std::chrono::system_clock::now();
-float maxTimeLeft = 60.0; // seconds
+float maxTimeLeft = 20.0; // seconds
 
 bool DEBUG = FALSE;
 
@@ -360,25 +360,25 @@ void keyboard(unsigned char c, int x, int y)
     {
     // Player Keys
     case 'w':
-        if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() + 1) && !charactersEnemyCollision(player.getX(), player.getY() + 1))
+        if (player.getStatus() == QUIET /*&& !isWall(player.getX(), player.getY() + 1)*/ && !charactersEnemyCollision(player.getX(), player.getY() + 1))
         {
             player.init_movement(player.getX(), player.getY() + 1, UP, player_speed);
         }
         break;
     case 's':
-        if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() - 1) && !charactersEnemyCollision(player.getX(), player.getY() - 1))
+        if (player.getStatus() == QUIET /*&& !isWall(player.getX(), player.getY() - 1)*/ && !charactersEnemyCollision(player.getX(), player.getY() - 1))
         {
             player.init_movement(player.getX(), player.getY() - 1, DOWN, player_speed);
         }
         break;
     case 'a':
-        if (player.getStatus() == QUIET && !isWall(player.getX() - 1, player.getY()) && !charactersEnemyCollision(player.getX() - 1, player.getY()))
+        if (player.getStatus() == QUIET /*&& !isWall(player.getX() - 1, player.getY())*/ && !charactersEnemyCollision(player.getX() - 1, player.getY()))
         {
             player.init_movement(player.getX() - 1, player.getY(), LEFT, player_speed);
         }
         break;
     case 'd':
-        if (player.getStatus() == QUIET && !isWall(player.getX() + 1, player.getY()) && !charactersEnemyCollision(player.getX() + 1, player.getY()))
+        if (player.getStatus() == QUIET /*&& !isWall(player.getX() + 1, player.getY())*/ && !charactersEnemyCollision(player.getX() + 1, player.getY()))
         {
             player.init_movement(player.getX() + 1, player.getY(), RIGHT, player_speed);
         }
@@ -623,7 +623,7 @@ int main(int argc, char *argv[])
     start = std::chrono::system_clock::now();
 
     // Create Player
-    player.init(0, 1, map.height - 2, RIGHT);
+    player.init(0, 1, map.height - 2, DOWN);
 
     // Create Enemy
     enemy.init(1, map.width - 2, 1, LEFT);

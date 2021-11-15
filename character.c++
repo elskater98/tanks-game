@@ -66,9 +66,12 @@ public:
         id = _id;
         status = QUIET;
         setPosition(x, y);
-        setOrientation(orientation);
-        currentDegree = getDegree(orientation);
+        //setOrientation(orientation);
+        //currentDegree = getDegree(orientation);
         //rotation = 90;
+
+        this->orientation = DOWN;
+        this->currentDegree = -90;
     }
 
     void display() {
@@ -77,7 +80,7 @@ public:
         glPushMatrix();
         glTranslatef(x * MAP_CELL_WIDTH, y * MAP_CELL_WIDTH, 0);
         glTranslatef(size / 2, size / 2, 0);
-        glRotatef(currentDegree, 0, 0, 1);
+        glRotatef(this->currentDegree, 0, 0, 1);
         glTranslatef(-size / 2, -size / 2, 0);
         //drawWheels(size, size, size);
         drawBase(size, size, size, colors);
@@ -365,12 +368,14 @@ public:
     void integrate(long t)
     {
         if (status == ROTATE && t < this->time_remaining_rotation) {
-            currentDegree = fmod(currentDegree + v_rotation * t, 360);
+            currentDegree = currentDegree + v_rotation * t;
             time_remaining_rotation -= t;
         }
-        else if (status = ROTATE && t >= time_remaining_rotation) {
+        else if (status == ROTATE && t >= this->time_remaining_rotation) {
             currentDegree = getDegree(dest_orientation);
+            orientation = dest_orientation;
             status = MOVE;
+            //this->time_remaining = this->time_remaining * 2;
         }
         else if (status == MOVE && t < this->time_remaining)
         {   
@@ -379,7 +384,7 @@ public:
             y = y + vy * t;
             time_remaining -= t;
         }
-        else if (status == MOVE && t >= time_remaining)
+        else if (status == MOVE && t >= this->time_remaining)
         {
             x = dest_x;
             y = dest_y;
@@ -404,13 +409,15 @@ public:
             int dest_degree = getDegree(dest_orientation);
             int src_degree = getDegree(orientation);
 
-            int diff = abs(dest_degree - src_degree) % 180;
+            /*int diff = abs(dest_degree - src_degree) % 180;
 
             if (dest_degree > src_degree) {
                 
             }
 
-            v_rotation = diff / duration;
+            v_rotation = diff / duration;*/
+
+            v_rotation = (dest_degree - src_degree) / duration;
             status = ROTATE;
             this->time_remaining_rotation = duration;
 
