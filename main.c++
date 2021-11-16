@@ -334,6 +334,7 @@ void display()
     glPolygonMode(GL_FRONT, GL_FILL);
     glPolygonMode(GL_BACK, GL_FILL);
 
+    glEnable(GL_LIGHTING);
     // Ambient light
 	position[0]=0; position[1]=0; position[2]=0; position[3]=0; 
 	glLightiv(GL_LIGHT0,GL_POSITION,position);
@@ -364,6 +365,7 @@ void display()
     enemy.display();
 
     // HUD
+    glDisable(GL_LIGHTING);
     printTimeLeft();
 
     glutSwapBuffers();
@@ -675,8 +677,7 @@ int main(int argc, char *argv[])
     glutInitWindowSize(cell_width * map.width, cell_width * map.height);
     glutCreateWindow("~ Game ~");
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_MULTISAMPLE); 
-    glEnable(GL_LIGHTING);
+    glEnable(GL_MULTISAMPLE);
     glEnable(GL_NORMALIZE);
 	glEnable(GL_COLOR_MATERIAL);
 
