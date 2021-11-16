@@ -50,8 +50,6 @@ float maxTimeLeft = 20.0; // seconds
 
 bool DEBUG = FALSE;
 
-GLfloat spot_direction[] = {10.0f, 0.0f, 0.0f};
-
 void displayWall(int x, int y)
 {
     glEnable(GL_TEXTURE_2D);
@@ -348,7 +346,7 @@ void display()
     glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
 	glEnable(GL_LIGHT0);
 
-    //Spotlight (player) 
+    /*//Spotlight (player) 
 	spot_position[0]=player.getX(); spot_position[1]=player.getY(); spot_position[2]=MAP_CELL_WIDTH; spot_position[3]=1; 
 	spot_color[0]=0.8; spot_color[1]=0.8; spot_color[2]=0.8; spot_color[3]=1;
 	diffuseLight[0]=0.1; diffuseLight[1]=0.1; diffuseLight[2]=0.1; diffuseLight[3]=1; 
@@ -359,7 +357,7 @@ void display()
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLight);
 	glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight);
 	glLightf (GL_LIGHT1, GL_SPOT_EXPONENT, 32.0f);
-	glEnable(GL_LIGHT1);
+	glEnable(GL_LIGHT1);*/
 
     showMap();
     player.display();
@@ -396,28 +394,32 @@ void keyboard(unsigned char c, int x, int y)
         if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() + 1) && !charactersEnemyCollision(player.getX(), player.getY() + 1))
         {
             player.init_movement(player.getX(), player.getY() + 1, UP, player_speed);
-            spot_direction[0]=0; spot_direction[1]=10; spot_direction[2]=0;
+            player.setFocus(0, 10, 0);
+            //spot_direction[0]=0; spot_direction[1]=10; spot_direction[2]=0;
         }
         break;
     case 's':
         if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() - 1) && !charactersEnemyCollision(player.getX(), player.getY() - 1))
         {
             player.init_movement(player.getX(), player.getY() - 1, DOWN, player_speed);
-            spot_direction[0]=0; spot_direction[1]=-10; spot_direction[2]=0;
+            player.setFocus(0, -10, 0);
+            //spot_direction[0]=0; spot_direction[1]=-10; spot_direction[2]=0;
         }
         break;
     case 'a':
         if (player.getStatus() == QUIET && !isWall(player.getX() - 1, player.getY()) && !charactersEnemyCollision(player.getX() - 1, player.getY()))
         {
             player.init_movement(player.getX() - 1, player.getY(), LEFT, player_speed);
-            spot_direction[0]=-10; spot_direction[1]=0; spot_direction[2]=0;
+            player.setFocus(-10, 0, 0);
+            //spot_direction[0]=-10; spot_direction[1]=0; spot_direction[2]=0;
         }
         break;
     case 'd':
         if (player.getStatus() == QUIET && !isWall(player.getX() + 1, player.getY()) && !charactersEnemyCollision(player.getX() + 1, player.getY()))
         {
             player.init_movement(player.getX() + 1, player.getY(), RIGHT, player_speed);
-            spot_direction[0]=10; spot_direction[1]=0; spot_direction[2]=0;
+            player.setFocus(10, 0, 0);
+            //spot_direction[0]=10; spot_direction[1]=0; spot_direction[2]=0;
         }
         break;
 
