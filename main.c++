@@ -394,7 +394,7 @@ void keyboard(unsigned char c, int x, int y)
         if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() + 1) && !charactersEnemyCollision(player.getX(), player.getY() + 1))
         {
             player.init_movement(player.getX(), player.getY() + 1, UP, player_speed);
-            player.setFocus(0, 10, 0);
+            //player.setFocus(0, 10, 0);
             //spot_direction[0]=0; spot_direction[1]=10; spot_direction[2]=0;
         }
         break;
@@ -402,7 +402,7 @@ void keyboard(unsigned char c, int x, int y)
         if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() - 1) && !charactersEnemyCollision(player.getX(), player.getY() - 1))
         {
             player.init_movement(player.getX(), player.getY() - 1, DOWN, player_speed);
-            player.setFocus(0, -10, 0);
+            //player.setFocus(0, -10, 0);
             //spot_direction[0]=0; spot_direction[1]=-10; spot_direction[2]=0;
         }
         break;
@@ -410,7 +410,7 @@ void keyboard(unsigned char c, int x, int y)
         if (player.getStatus() == QUIET && !isWall(player.getX() - 1, player.getY()) && !charactersEnemyCollision(player.getX() - 1, player.getY()))
         {
             player.init_movement(player.getX() - 1, player.getY(), LEFT, player_speed);
-            player.setFocus(-10, 0, 0);
+            //player.setFocus(-10, 0, 0);
             //spot_direction[0]=-10; spot_direction[1]=0; spot_direction[2]=0;
         }
         break;
@@ -418,7 +418,7 @@ void keyboard(unsigned char c, int x, int y)
         if (player.getStatus() == QUIET && !isWall(player.getX() + 1, player.getY()) && !charactersEnemyCollision(player.getX() + 1, player.getY()))
         {
             player.init_movement(player.getX() + 1, player.getY(), RIGHT, player_speed);
-            player.setFocus(10, 0, 0);
+            //player.setFocus(10, 0, 0);
             //spot_direction[0]=10; spot_direction[1]=0; spot_direction[2]=0;
         }
         break;
