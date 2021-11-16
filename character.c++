@@ -24,7 +24,7 @@ using namespace std;
 class Character
 {
 private:
-    float x, y, vx, vy, v_rotation;
+    float x, y, vx, vy, v_angular;
     float status;
     long time_remaining, time_remaining_rotation;
     int id;
@@ -368,14 +368,13 @@ public:
     void integrate(long t)
     {
         if (status == ROTATE && t < this->time_remaining_rotation) {
-            currentDegree = currentDegree + v_rotation * t;
+            currentDegree = currentDegree + v_angular * t;
             time_remaining_rotation -= t;
         }
         else if (status == ROTATE && t >= this->time_remaining_rotation) {
             currentDegree = getDegree(dest_orientation);
             orientation = dest_orientation;
             status = MOVE;
-            //this->time_remaining = this->time_remaining * 2;
         }
         else if (status == MOVE && t < this->time_remaining)
         {   
@@ -404,12 +403,12 @@ public:
         this->dest_y = destination_y;
 
         // ROTATION
-        if (orientation != dest_orientation) {
+        if (this->orientation != dest_orientation) {
             
             int dest_degree = getDegree(dest_orientation);
-            int src_degree = getDegree(orientation);
+            int currentDegree = getDegree(orientation);
 
-            int diff = dest_degree - src_degree;
+            int diff = dest_degree - currentDegree;
 
             if (abs(diff) == 270) {
                 if (diff >= 0) {
@@ -419,15 +418,11 @@ public:
                 }
             }
 
-            /*v_rotation = diff / duration;*/
-
-            v_rotation = diff / duration;
+            v_angular = diff / duration;
             status = ROTATE;
+
             this->time_remaining_rotation = duration;
-
             this->dest_orientation = dest_orientation;
-
-            this->currentDegree = getDegree(orientation);
         }
     }
 };
