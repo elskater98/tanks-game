@@ -50,6 +50,8 @@ float maxTimeLeft = 20.0; // seconds
 
 bool DEBUG = FALSE;
 
+GLfloat spot_direction[] = {10.0f, 0.0f, 0.0f};
+
 void displayWall(int x, int y)
 {
     glEnable(GL_TEXTURE_2D);
@@ -310,9 +312,15 @@ void PositionObserver(float alpha, float beta, int radi)
 
 void display()
 {
+    GLint position[4];
+    GLfloat color[4];
+    GLint spot_position[4];
+  	GLfloat spot_color[4];
+
     glClearColor(0.0, 0.0, 0.0, 0.0); // black background
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    glShadeModel(GL_SMOOTH);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -327,6 +335,31 @@ void display()
 
     glPolygonMode(GL_FRONT, GL_FILL);
     glPolygonMode(GL_BACK, GL_FILL);
+
+    // Ambient light
+	position[0]=0; position[1]=0; position[2]=0; position[3]=0; 
+	glLightiv(GL_LIGHT0,GL_POSITION,position);
+	
+	color[0]=0.2f; color[1]=0.2f; color[2]=0.2f; color[3]=1.0f;
+	GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+    GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	glLightfv(GL_LIGHT0, GL_AMBIENT, color);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+	glEnable(GL_LIGHT0);
+
+    //Spotlight (player) 
+	spot_position[0]=player.getX(); spot_position[1]=player.getY(); spot_position[2]=MAP_CELL_WIDTH; spot_position[3]=1; 
+	spot_color[0]=0.8; spot_color[1]=0.8; spot_color[2]=0.8; spot_color[3]=1;
+	diffuseLight[0]=0.1; diffuseLight[1]=0.1; diffuseLight[2]=0.1; diffuseLight[3]=1; 
+	glLightfv(GL_LIGHT1, GL_AMBIENT, spot_color);
+	glLightiv(GL_LIGHT1,GL_POSITION, spot_position);
+	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_direction);
+	glLightf (GL_LIGHT1, GL_SPOT_CUTOFF, 90.0f);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLight);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight);
+	glLightf (GL_LIGHT1, GL_SPOT_EXPONENT, 32.0f);
+	glEnable(GL_LIGHT1);
 
     showMap();
     player.display();
@@ -363,24 +396,28 @@ void keyboard(unsigned char c, int x, int y)
         if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() + 1) && !charactersEnemyCollision(player.getX(), player.getY() + 1))
         {
             player.init_movement(player.getX(), player.getY() + 1, UP, player_speed);
+            spot_direction[0]=0; spot_direction[1]=10; spot_direction[2]=0;
         }
         break;
     case 's':
         if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() - 1) && !charactersEnemyCollision(player.getX(), player.getY() - 1))
         {
             player.init_movement(player.getX(), player.getY() - 1, DOWN, player_speed);
+            spot_direction[0]=0; spot_direction[1]=-10; spot_direction[2]=0;
         }
         break;
     case 'a':
         if (player.getStatus() == QUIET && !isWall(player.getX() - 1, player.getY()) && !charactersEnemyCollision(player.getX() - 1, player.getY()))
         {
             player.init_movement(player.getX() - 1, player.getY(), LEFT, player_speed);
+            spot_direction[0]=-10; spot_direction[1]=0; spot_direction[2]=0;
         }
         break;
     case 'd':
         if (player.getStatus() == QUIET && !isWall(player.getX() + 1, player.getY()) && !charactersEnemyCollision(player.getX() + 1, player.getY()))
         {
             player.init_movement(player.getX() + 1, player.getY(), RIGHT, player_speed);
+            spot_direction[0]=10; spot_direction[1]=0; spot_direction[2]=0;
         }
         break;
 
@@ -636,6 +673,10 @@ int main(int argc, char *argv[])
     glutInitWindowSize(cell_width * map.width, cell_width * map.height);
     glutCreateWindow("~ Game ~");
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE); 
+    glEnable(GL_LIGHTING);
+    glEnable(GL_NORMALIZE);
+	glEnable(GL_COLOR_MATERIAL);
 
     glutDisplayFunc(display);
 
