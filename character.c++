@@ -47,11 +47,11 @@ private:
     }
 
 public:
-    void setFocus(int x, int y, int z) {
+    /*void setFocus(int x, int y, int z) {
         this->spot_direction[0]=x;
         this->spot_direction[1]=y;
         this->spot_direction[2]=z;
-    }
+    }*/
 
     float getX()
     {
@@ -84,11 +84,6 @@ public:
     void display() {
         int size = 25;
 
-        GLint spot_position[4];
-        GLfloat spot_color[4];
-        GLfloat diffuseLight[] = {0.8f, 0.8f, 0.8f, 1.0f };
-        GLfloat specularLight[] = {0.5f, 0.5f, 0.5f, 1.0f };
-
         glPushMatrix();
         glTranslatef(x * MAP_CELL_WIDTH, y * MAP_CELL_WIDTH, 0);
         glTranslatef(size / 2, size / 2, 0);
@@ -99,18 +94,25 @@ public:
         drawCavin(size, size, size, colors);
         drawCannon(size, size, size);
 
-        //Spotlight (player)
-        spot_position[0]=x; spot_position[1]=y; spot_position[2]=MAP_CELL_WIDTH; spot_position[3]=1; 
-        spot_color[0]=0.8; spot_color[1]=0.8; spot_color[2]=0.8; spot_color[3]=1;
-        diffuseLight[0]=0.1; diffuseLight[1]=0.1; diffuseLight[2]=0.1; diffuseLight[3]=1; 
-        glLightfv(GL_LIGHT1, GL_AMBIENT, spot_color);
-        glLightiv(GL_LIGHT1,GL_POSITION, spot_position);
-        glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_direction);
-        glLightf (GL_LIGHT1, GL_SPOT_CUTOFF, 90.0f);
-        glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLight);
-        glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight);
-        glLightf (GL_LIGHT1, GL_SPOT_EXPONENT, 32.0f);
-        glEnable(GL_LIGHT1);
+        if(this->id == 0) {
+            GLint spot_position[4];
+            GLfloat spot_color[4];
+            GLfloat diffuseLight[] = {0.8f, 0.8f, 0.8f, 1.0f };
+            GLfloat specularLight[] = {0.5f, 0.5f, 0.5f, 1.0f };
+            
+            //Spotlight (player)
+            spot_position[0]=x; spot_position[1]=y; spot_position[2]=MAP_CELL_WIDTH; spot_position[3]=1; 
+            spot_color[0]=0.8; spot_color[1]=0.8; spot_color[2]=0.8; spot_color[3]=1;
+            diffuseLight[0]=0.1; diffuseLight[1]=0.1; diffuseLight[2]=0.1; diffuseLight[3]=1; 
+            glLightfv(GL_LIGHT1, GL_AMBIENT, spot_color);
+            glLightiv(GL_LIGHT1,GL_POSITION, spot_position);
+            glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_direction);
+            glLightf (GL_LIGHT1, GL_SPOT_CUTOFF, 90.0f);
+            glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLight);
+            glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight);
+            glLightf (GL_LIGHT1, GL_SPOT_EXPONENT, 32.0f);
+            glEnable(GL_LIGHT1);
+        }
 
         glPopMatrix();
     }
