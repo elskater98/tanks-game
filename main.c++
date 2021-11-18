@@ -428,8 +428,8 @@ void keyboard(unsigned char c, int x, int y)
     // Reset Map
     case 'r':
         map.create(input_width, input_height);
-        player.init(0, 1, map.height - 2, RIGHT);
-        enemy.init(1, map.width - 2, 1, LEFT);
+        player.init(0, 1, map.height - 2, RIGHT,0.0,0.0,1.0);
+        enemy.init(1, map.width - 2, 1, LEFT,1.0,0.0,1.0);
         start = std::chrono::system_clock::now();
         break;
 
@@ -664,10 +664,10 @@ int main(int argc, char *argv[])
     start = std::chrono::system_clock::now();
 
     // Create Player
-    player.init(0, 1, map.height - 2, DOWN);
+    player.init(0, 1, map.height - 2, DOWN,0.0,0.0,1.0);
 
     // Create Enemy
-    enemy.init(1, map.width - 2, 1, LEFT);
+    enemy.init(1, map.width - 2, 1, LEFT,1.0,0.0,1.0);
     thread t1(moveEnemy);
 
     // Set window
