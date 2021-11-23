@@ -33,7 +33,6 @@ Character player = Character();
 Character enemy = Character();
 
 int cell_width = 25;
-int keyflag = 0;
 int input_width;
 int input_height;
 long last_t = 0;
@@ -42,7 +41,7 @@ int enemy_speed = 200;
 
 // Observation
 int anglealpha = 64;
-int anglebeta = -15; 
+int anglebeta = -15;
 float zoom = 0.7f;
 
 auto start = std::chrono::system_clock::now();
@@ -313,7 +312,7 @@ void display()
     GLint position[4];
     GLfloat color[4];
     GLint spot_position[4];
-  	GLfloat spot_color[4];
+    GLfloat spot_color[4];
 
     glClearColor(0.0, 0.0, 0.0, 0.0); // black background
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -335,17 +334,24 @@ void display()
     glPolygonMode(GL_BACK, GL_FILL);
 
     glEnable(GL_LIGHTING);
+
     // Ambient light
-	position[0]=0; position[1]=0; position[2]=0; position[3]=0; 
-	glLightiv(GL_LIGHT0,GL_POSITION,position);
-	
-	color[0]=0.2f; color[1]=0.2f; color[2]=0.2f; color[3]=1.0f;
-	GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8f, 1.0f };
-    GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	glLightfv(GL_LIGHT0, GL_AMBIENT, color);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+    position[0] = 0;
+    position[1] = 0;
+    position[2] = 0;
+    position[3] = 0;
+    glLightiv(GL_LIGHT0, GL_POSITION, position);
+
+    color[0] = 0.2f;
+    color[1] = 0.2f;
+    color[2] = 0.2f;
+    color[3] = 1.0f;
+    GLfloat diffuseLight[] = {0.8f, 0.8f, 0.8f, 1.0f};
+    GLfloat specularLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
+    glLightfv(GL_LIGHT0, GL_AMBIENT, color);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
     glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
-	glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT0);
 
     /*//Spotlight (player) 
 	spot_position[0]=player.getX(); spot_position[1]=player.getY(); spot_position[2]=MAP_CELL_WIDTH; spot_position[3]=1; 
@@ -428,8 +434,8 @@ void keyboard(unsigned char c, int x, int y)
     // Reset Map
     case 'r':
         map.create(input_width, input_height);
-        player.init(0, 1, map.height - 2, RIGHT,0.0,0.0,1.0);
-        enemy.init(1, map.width - 2, 1, LEFT,1.0,0.0,1.0);
+        player.init(0, 1, map.height - 2, RIGHT, 0.0, 0.0, 1.0);
+        enemy.init(1, map.width - 2, 1, LEFT, 1.0, 0.0, 1.0);
         start = std::chrono::system_clock::now();
         break;
 
@@ -523,7 +529,7 @@ void moveEnemy()
                 case RIGHT:
                     if (!isWall(enemy.getX() + 1, enemy.getY()) && !charactersPlayerCollision(enemy.getX() + 1, enemy.getY()))
                     {
-                        enemy.init_movement(enemy.getX() + 1, enemy.getY(), RIGHT,enemy_speed);
+                        enemy.init_movement(enemy.getX() + 1, enemy.getY(), RIGHT, enemy_speed);
                     }
                     break;
                 }
@@ -664,10 +670,10 @@ int main(int argc, char *argv[])
     start = std::chrono::system_clock::now();
 
     // Create Player
-    player.init(0, 1, map.height - 2, DOWN,0.0,0.0,1.0);
+    player.init(0, 1, map.height - 2, DOWN, 0.0, 0.0, 1.0);
 
     // Create Enemy
-    enemy.init(1, map.width - 2, 1, LEFT,1.0,0.0,1.0);
+    enemy.init(1, map.width - 2, 1, LEFT, 1.0, 0.0, 1.0);
     thread t1(moveEnemy);
 
     // Set window
@@ -679,7 +685,7 @@ int main(int argc, char *argv[])
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_NORMALIZE);
-	glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_COLOR_MATERIAL);
 
     glutDisplayFunc(display);
 
