@@ -51,6 +51,8 @@ bool DEBUG = FALSE;
 
 void displayWall(int x, int y)
 {
+    // Function that represents the walls
+
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 2);
     glBegin(GL_QUADS);
@@ -138,6 +140,7 @@ void displayWall(int x, int y)
 
 void displayCorridor(int x, int y)
 {
+    // Function that represents the corrider as floor
     glBindTexture(GL_TEXTURE_2D, 1);
     glEnable(GL_TEXTURE_2D);
     glBegin(GL_QUADS);
@@ -155,6 +158,7 @@ void displayCorridor(int x, int y)
 
 void displayInitialPlayer(int x, int y)
 {
+    // Function that represents the initial point of the player
     glBindTexture(GL_TEXTURE_2D, 3);
     glEnable(GL_TEXTURE_2D);
     glBegin(GL_QUADS);
@@ -172,6 +176,7 @@ void displayInitialPlayer(int x, int y)
 
 void displayInitialEnemy(int x, int y)
 {
+    // Function that represents the initial point of the enemy
     glBindTexture(GL_TEXTURE_2D, 4);
     glEnable(GL_TEXTURE_2D);
     glBegin(GL_QUADS);
@@ -227,6 +232,7 @@ void printTimeLeft()
 
 void showMap()
 {
+    // Function that loops over map and display each place
     for (int x = 0; x < map.width; x++)
     {
         for (int y = 0; y < map.height; y++)
@@ -353,24 +359,14 @@ void display()
     glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
     glEnable(GL_LIGHT0);
 
-    /*//Spotlight (player) 
-	spot_position[0]=player.getX(); spot_position[1]=player.getY(); spot_position[2]=MAP_CELL_WIDTH; spot_position[3]=1; 
-	spot_color[0]=0.8; spot_color[1]=0.8; spot_color[2]=0.8; spot_color[3]=1;
-	diffuseLight[0]=0.1; diffuseLight[1]=0.1; diffuseLight[2]=0.1; diffuseLight[3]=1; 
-	glLightfv(GL_LIGHT1, GL_AMBIENT, spot_color);
-	glLightiv(GL_LIGHT1,GL_POSITION, spot_position);
-	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_direction);
-	glLightf (GL_LIGHT1, GL_SPOT_CUTOFF, 90.0f);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLight);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight);
-	glLightf (GL_LIGHT1, GL_SPOT_EXPONENT, 32.0f);
-	glEnable(GL_LIGHT1);*/
-
+    // Display map
     showMap();
+
+    // Display palyer/enemy
     player.display();
     enemy.display();
 
-    // HUD
+    // Time HUD
     glDisable(GL_LIGHTING);
     printTimeLeft();
 
@@ -402,32 +398,24 @@ void keyboard(unsigned char c, int x, int y)
         if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() + 1) && !charactersEnemyCollision(player.getX(), player.getY() + 1))
         {
             player.init_movement(player.getX(), player.getY() + 1, UP, player_speed);
-            //player.setFocus(0, 10, 0);
-            //spot_direction[0]=0; spot_direction[1]=10; spot_direction[2]=0;
         }
         break;
     case 's':
         if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() - 1) && !charactersEnemyCollision(player.getX(), player.getY() - 1))
         {
             player.init_movement(player.getX(), player.getY() - 1, DOWN, player_speed);
-            //player.setFocus(0, -10, 0);
-            //spot_direction[0]=0; spot_direction[1]=-10; spot_direction[2]=0;
         }
         break;
     case 'a':
         if (player.getStatus() == QUIET && !isWall(player.getX() - 1, player.getY()) && !charactersEnemyCollision(player.getX() - 1, player.getY()))
         {
             player.init_movement(player.getX() - 1, player.getY(), LEFT, player_speed);
-            //player.setFocus(-10, 0, 0);
-            //spot_direction[0]=-10; spot_direction[1]=0; spot_direction[2]=0;
         }
         break;
     case 'd':
         if (player.getStatus() == QUIET && !isWall(player.getX() + 1, player.getY()) && !charactersEnemyCollision(player.getX() + 1, player.getY()))
         {
             player.init_movement(player.getX() + 1, player.getY(), RIGHT, player_speed);
-            //player.setFocus(10, 0, 0);
-            //spot_direction[0]=10; spot_direction[1]=0; spot_direction[2]=0;
         }
         break;
 
@@ -487,6 +475,7 @@ void idle()
 
 void moveEnemy()
 {
+    // Random Algorithm to move enemy to player base
     while (true)
     {
         float d = rand() % 10;
@@ -547,6 +536,7 @@ void moveEnemy()
 
 void readJPEG(char *filename, unsigned char **image, int *width, int *height)
 {
+    // https://github.com/hatsyio/Pacman_CPP
     struct jpeg_decompress_struct cinfo;
     struct jpeg_error_mgr jerr;
     FILE *infile;
@@ -687,9 +677,14 @@ int main(int argc, char *argv[])
     glEnable(GL_NORMALIZE);
     glEnable(GL_COLOR_MATERIAL);
 
+
+    // Display
     glutDisplayFunc(display);
 
+    // Keyboard
     glutKeyboardFunc(keyboard);
+
+    // Idle
     glutIdleFunc(idle);
 
     //Load Textures

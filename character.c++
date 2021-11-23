@@ -24,13 +24,14 @@ using namespace std;
 class Character
 {
 private:
+    // Private properties
     float x, y, vx, vy, v_angular;
     float status;
     long time_remaining, time_remaining_rotation;
-    int id;
+    int id; // 0= Player ; 1 = Enemy
     float rotation;
     float orientation;
-    float colors[3];
+    float colors[3]; // RGB
     float currentDegree;
     GLfloat spot_direction[3] = {10, 0, 0};
 
@@ -66,12 +67,15 @@ public:
 
     void init(int _id, float x, float y, float orientation, float r, float g, float b)
     {
+        // Create Character
         id = _id;
         status = QUIET;
         this->colors[0] = r;
         this->colors[1] = g;
         this->colors[2] = b;
+
         setPosition(x, y);
+        
         this->orientation = RIGHT;
         this->currentDegree = 0;
     }
