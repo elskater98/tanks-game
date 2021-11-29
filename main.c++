@@ -45,152 +45,9 @@ int anglebeta = -15;
 float zoom = 0.7f;
 
 auto start = std::chrono::system_clock::now();
-float maxTimeLeft = 20.0; // seconds
+float maxTimeLeft = 200.0; // seconds
 
-bool DEBUG = FALSE;
-
-void displayWall(int x, int y)
-{
-    // Function that represents the walls
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, 2);
-    glBegin(GL_QUADS);
-    glTexCoord2f(-0.25, 0.0);
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
-    glTexCoord2f(0.25, 0.0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
-    glTexCoord2f(0.25, 0.25);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
-    glTexCoord2f(-0.25, 0.25);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBegin(GL_QUADS);
-    glTexCoord2f(-1.0, 0.0);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);
-    glTexCoord2f(1.0, 0.0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
-    glTexCoord2f(1.0, 1.0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
-    glTexCoord2f(-1.0, 1.0);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBegin(GL_QUADS);
-    glTexCoord2f(-1.0, 0.0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
-    glTexCoord2f(1.0, 0.0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
-    glTexCoord2f(1.0, 1.0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
-    glTexCoord2f(-1.0, 1.0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBegin(GL_QUADS);
-    glTexCoord2f(-1.0, 0.0);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);
-    glTexCoord2f(1.0, 0.0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
-    glTexCoord2f(1.0, 1.0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
-    glTexCoord2f(-1.0, 1.0);
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBegin(GL_QUADS);
-    glTexCoord2f(-1.0, 0.0);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
-    glTexCoord2f(1.0, 0.0);
-    glVertex3i(x * (cell_width), y * (cell_width), 0);
-    glTexCoord2f(1.0, 1.0);
-    glVertex3i(x * (cell_width), y * (cell_width), cell_width);
-    glTexCoord2f(-1.0, 1.0);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBegin(GL_QUADS);
-    glTexCoord2f(1.0, 0.0);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
-    glTexCoord2f(-1.0, 0.0);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
-    glTexCoord2f(-0.5, 0.5);
-    glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
-    glTexCoord2f(0.5, 0.5);
-    glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-}
-
-void displayCorridor(int x, int y)
-{
-    // Function that represents the corrider as floor
-    glBindTexture(GL_TEXTURE_2D, 1);
-    glEnable(GL_TEXTURE_2D);
-    glBegin(GL_QUADS);
-    glTexCoord2f(-0.5, 0.0);
-    glVertex2i(x * (cell_width), y * (cell_width));
-    glTexCoord2f(0.5, 0.0);
-    glVertex2i(x * (cell_width) + cell_width, y * (cell_width));
-    glTexCoord2f(0.5, 0.5);
-    glVertex2i(x * (cell_width) + cell_width, y * (cell_width) + cell_width);
-    glTexCoord2f(-0.5, 0.5);
-    glVertex2i(x * (cell_width), y * (cell_width) + cell_width);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-}
-
-void displayInitialPlayer(int x, int y)
-{
-    // Function that represents the initial point of the player
-    glBindTexture(GL_TEXTURE_2D, 3);
-    glEnable(GL_TEXTURE_2D);
-    glBegin(GL_QUADS);
-    glTexCoord2f(-0.5, 0.0);
-    glVertex2i(x * (cell_width), y * (cell_width));
-    glTexCoord2f(0.5, 0.0);
-    glVertex2i(x * (cell_width) + cell_width, y * (cell_width));
-    glTexCoord2f(0.5, 0.5);
-    glVertex2i(x * (cell_width) + cell_width, y * (cell_width) + cell_width);
-    glTexCoord2f(-0.5, 0.5);
-    glVertex2i(x * (cell_width), y * (cell_width) + cell_width);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-}
-
-void displayInitialEnemy(int x, int y)
-{
-    // Function that represents the initial point of the enemy
-    glBindTexture(GL_TEXTURE_2D, 4);
-    glEnable(GL_TEXTURE_2D);
-    glBegin(GL_QUADS);
-    glTexCoord2f(-0.5, 0.0);
-    glVertex2i(x * (cell_width), y * (cell_width));
-    glTexCoord2f(0.5, 0.0);
-    glVertex2i(x * (cell_width) + cell_width, y * (cell_width));
-    glTexCoord2f(0.5, 0.5);
-    glVertex2i(x * (cell_width) + cell_width, y * (cell_width) + cell_width);
-    glTexCoord2f(-0.5, 0.5);
-    glVertex2i(x * (cell_width), y * (cell_width) + cell_width);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-}
+bool DEBUG = false;
 
 void printTimeLeft()
 {
@@ -201,8 +58,7 @@ void printTimeLeft()
     std::chrono::duration<double> elapsed_seconds = end - start;
 
     // Time Left Exceeded
-    if (maxTimeLeft - elapsed_seconds.count() < 0)
-    {
+    if (maxTimeLeft - elapsed_seconds.count() < 0) {
         exit(0);
     }
 
@@ -228,36 +84,6 @@ void printTimeLeft()
 
     // https://stackoverflow.com/questions/8956736/glcolor-coloring-all-textures/26526213
     glColor4f(1.f, 1.f, 1.f, 1.f); // unbind the texture
-}
-
-void showMap()
-{
-    // Function that loops over map and display each place
-    for (int x = 0; x < map.width; x++)
-    {
-        for (int y = 0; y < map.height; y++)
-        {
-            if (map.array2D[map.getPosition(x, y)] == map.getWallSymbol())
-            {
-                displayWall(x, y);
-            }
-            else if (map.array2D[map.getPosition(x, y)] == map.getCorridorSymbol())
-            {
-                if (x == 1 && y == map.height - 2)
-                {
-                    displayInitialPlayer(x, y);
-                }
-                else if (x == map.width - 2 && y == 1)
-                {
-                    displayInitialEnemy(x, y);
-                }
-                else
-                {
-                    displayCorridor(x, y);
-                }
-            }
-        }
-    }
 }
 
 bool isWall(int x, int y)
@@ -341,7 +167,7 @@ void display()
 
     glEnable(GL_LIGHTING);
 
-    // Ambient light
+    // Ambient light configuration
     position[0] = 0;
     position[1] = 0;
     position[2] = 0;
@@ -360,7 +186,7 @@ void display()
     glEnable(GL_LIGHT0);
 
     // Display map
-    showMap();
+    map.display();
 
     // Display palyer/enemy
     player.display();
@@ -390,66 +216,57 @@ void askDimensions()
 
 void keyboard(unsigned char c, int x, int y)
 {
-
     switch (c)
     {
-    // Player Keys
-    case 'w':
-        if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() + 1) && !charactersEnemyCollision(player.getX(), player.getY() + 1))
-        {
-            player.init_movement(player.getX(), player.getY() + 1, UP, player_speed);
-        }
-        break;
-    case 's':
-        if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() - 1) && !charactersEnemyCollision(player.getX(), player.getY() - 1))
-        {
-            player.init_movement(player.getX(), player.getY() - 1, DOWN, player_speed);
-        }
-        break;
-    case 'a':
-        if (player.getStatus() == QUIET && !isWall(player.getX() - 1, player.getY()) && !charactersEnemyCollision(player.getX() - 1, player.getY()))
-        {
-            player.init_movement(player.getX() - 1, player.getY(), LEFT, player_speed);
-        }
-        break;
-    case 'd':
-        if (player.getStatus() == QUIET && !isWall(player.getX() + 1, player.getY()) && !charactersEnemyCollision(player.getX() + 1, player.getY()))
-        {
-            player.init_movement(player.getX() + 1, player.getY(), RIGHT, player_speed);
-        }
-        break;
+        // Player Keys
+        case 'w':
+            if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() + 1) && !charactersEnemyCollision(player.getX(), player.getY() + 1))
+            {
+                player.init_movement(player.getX(), player.getY() + 1, UP, player_speed);
+            }
+            break;
+        case 's':
+            if (player.getStatus() == QUIET && !isWall(player.getX(), player.getY() - 1) && !charactersEnemyCollision(player.getX(), player.getY() - 1))
+            {
+                player.init_movement(player.getX(), player.getY() - 1, DOWN, player_speed);
+            }
+            break;
+        case 'a':
+            if (player.getStatus() == QUIET && !isWall(player.getX() - 1, player.getY()) && !charactersEnemyCollision(player.getX() - 1, player.getY()))
+            {
+                player.init_movement(player.getX() - 1, player.getY(), LEFT, player_speed);
+            }
+            break;
+        case 'd':
+            if (player.getStatus() == QUIET && !isWall(player.getX() + 1, player.getY()) && !charactersEnemyCollision(player.getX() + 1, player.getY()))
+            {
+                player.init_movement(player.getX() + 1, player.getY(), RIGHT, player_speed);
+            }
+            break;
 
-    // Reset Map
-    case 'r':
-        map.create(input_width, input_height);
-        player.init(0, 1, map.height - 2, RIGHT, 0.0, 0.0, 1.0);
-        enemy.init(1, map.width - 2, 1, LEFT, 1.0, 0.0, 1.0);
-        start = std::chrono::system_clock::now();
-        break;
+        // Reset Map
+        case 'r':
+            map.create(input_width, input_height, cell_width);
+            player.init(0, 1, map.height - 2, RIGHT, 0.0, 0.0, 1.0);
+            enemy.init(1, map.width - 2, 1, LEFT, 1.0, 0.0, 1.0);
+            start = std::chrono::system_clock::now();
+            break;
 
-    // Camera Keys
-    case 'i':
-        anglebeta = (anglebeta + 3);
-        /*if (anglebeta <= (90 - 4))
-        {
+        // Camera Keys
+        case 'i':
             anglebeta = (anglebeta + 3);
-        }*/
-        break;
-    case 'k':
-        anglebeta = anglebeta - 3;
-        /*if (anglebeta >= (-90 + 4))
-        {
+            break;
+        case 'k':
             anglebeta = anglebeta - 3;
-        }*/
-        break;
-    case 'j':
-        anglealpha = (anglealpha + 3) % 360;
-        break;
-    case 'l':
-        anglealpha = (anglealpha - 3 + 360) % 360;
-        break;
-    default:
-        break;
+            break;
+        case 'j':
+            anglealpha = (anglealpha + 3) % 360;
+            break;
+        case 'l':
+            anglealpha = (anglealpha - 3 + 360) % 360;
+            break;
+        default:
+            break;
     }
 
     glutPostRedisplay();
@@ -653,7 +470,7 @@ int main(int argc, char *argv[])
 
     srand(time(NULL)); // Set Seed to geneate random numbers
 
-    map.create(input_width, input_height); // create map
+    map.create(input_width, input_height, cell_width); // create map
     map.print();
 
     // Init Time Left
@@ -688,6 +505,7 @@ int main(int argc, char *argv[])
     glutIdleFunc(idle);
 
     //Load Textures
+    //map.loadGameTextures();
     loadGameTextures();
 
     glutMainLoop();

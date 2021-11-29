@@ -69,54 +69,71 @@ public:
     {
         // Create Character
         id = _id;
-        status = QUIET;
+        status = QUIET; // initial state for all characters
+
+        // colors to differentiate among characters
         this->colors[0] = r;
         this->colors[1] = g;
         this->colors[2] = b;
 
         setPosition(x, y);
         
+        // initial orientation & degree
         this->orientation = RIGHT;
-        this->currentDegree = 0;
+        this->currentDegree = getDegree(this->orientation); //0
     }
 
+    /**
+    * Display method
+    * draws and translates the character onto its position & orientation to the map
+    */
     void display()
     {
         glPushMatrix();
 
-        // Positioning
+        // Positioning on the map
         glTranslatef(x * MAP_CELL_WIDTH, y * MAP_CELL_WIDTH, 0);
 
-        // Rotation
+        /**
+        * Rotation on three steps
+        *   - advance the character
+        *   - rotate
+        *   - back the character
+        */
         glTranslatef(MAP_CELL_WIDTH / 2, MAP_CELL_WIDTH / 2, 0);
         glRotatef(this->currentDegree, 0, 0, 1);
         glTranslatef(-MAP_CELL_WIDTH / 2, -MAP_CELL_WIDTH / 2, 0);
 
         // Drawing
-        drawBase(MAP_CELL_WIDTH, MAP_CELL_WIDTH, MAP_CELL_WIDTH);
-        drawCavin(MAP_CELL_WIDTH, MAP_CELL_WIDTH, MAP_CELL_WIDTH);
-        drawCannon(MAP_CELL_WIDTH, MAP_CELL_WIDTH, MAP_CELL_WIDTH);
+        drawBase(MAP_CELL_WIDTH); // each element based on the CELL_WIDTH
+        drawCavin(MAP_CELL_WIDTH); // passing the parameter by value in case we wish drawing an element based on other sizes
+        drawCannon(MAP_CELL_WIDTH);
+
+        // Common light configuration for the two spotlights (player & enemy)
+        GLint spot_position[4] = {(int) x, (int) y, MAP_CELL_WIDTH, 1};
+        GLfloat spot_color[4] = {0.8, 0.8, 0.8, 1};
+        GLfloat diffuseLight[4] = {0.1, 0.1, 0.1, 1};/*{0.8f, 0.8f, 0.8f, 1.0f};*/
+        GLfloat specularLight[4] = {0.5f, 0.5f, 0.5f, 1.0f};
+
+        /*spot_position[4] = {x, y, MAP_CELL_WIDTH, 1};
+        /*spot_position[0] = x;
+        spot_position[1] = y;
+        spot_position[2] = MAP_CELL_WIDTH;
+        spot_position[3] = 1;*/
+        /*spot_color[4] = {0.8, 0.8, 0.8, 1};
+        /*spot_color[0] = 0.8;
+        spot_color[1] = 0.8;
+        spot_color[2] = 0.8;
+        spot_color[3] = 1;*/
+        /*diffuseLight[4] = {0.1, 0.1, 0.1, 1};
+        /*diffuseLight[0] = 0.1;
+        diffuseLight[1] = 0.1;
+        diffuseLight[2] = 0.1;
+        diffuseLight[3] = 1;*/
 
         // Spotlight (player)
         if (this->id == 0)
         {
-            GLint spot_position[4];
-            GLfloat spot_color[4];
-            GLfloat diffuseLight[] = {0.8f, 0.8f, 0.8f, 1.0f};
-            GLfloat specularLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
-
-            spot_position[0] = x;
-            spot_position[1] = y;
-            spot_position[2] = MAP_CELL_WIDTH;
-            spot_position[3] = 1;
-            spot_color[0] = 0.8;
-            spot_color[1] = 0.8;
-            spot_color[2] = 0.8;
-            spot_color[3] = 1;
-            diffuseLight[0] = 0.1;
-            diffuseLight[1] = 0.1;
-            diffuseLight[2] = 0.1;
-            diffuseLight[3] = 1;
             glLightfv(GL_LIGHT1, GL_AMBIENT, spot_color);
             glLightiv(GL_LIGHT1, GL_POSITION, spot_position);
             glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_direction);
@@ -126,25 +143,9 @@ public:
             glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 32.0f);
             glEnable(GL_LIGHT1);
         }
-        else
-        {
-            GLint spot_position[4];
-            GLfloat spot_color[4];
-            GLfloat diffuseLight[] = {0.8f, 0.8f, 0.8f, 1.0f};
-            GLfloat specularLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
-
-            spot_position[0] = x;
-            spot_position[1] = y;
-            spot_position[2] = MAP_CELL_WIDTH;
-            spot_position[3] = 1;
-            spot_color[0] = 0.8;
-            spot_color[1] = 0.8;
-            spot_color[2] = 0.8;
-            spot_color[3] = 1;
-            diffuseLight[0] = 0.1;
-            diffuseLight[1] = 0.1;
-            diffuseLight[2] = 0.1;
-            diffuseLight[3] = 1;
+        else {
+            // Spotlight (enemy)
+            // using a different GLenum light
             glLightfv(GL_LIGHT2, GL_AMBIENT, spot_color);
             glLightiv(GL_LIGHT2, GL_POSITION, spot_position);
             glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, spot_direction);
@@ -158,117 +159,137 @@ public:
         glPopMatrix();
     }
 
-    void drawBase(int size_x, int size_y, int size_z)
+    void drawBase(float cell_width)
     {
-
-        /*Roof*/
-        glColor3f(this->colors[0], this->colors[1], this->colors[2]);
+        //Roof // good
+        glColor3f(this->colors[0], this->colors[1], this->colors[2]); // getting the colors from the initial configuration
         glBegin(GL_QUADS);
-        glVertex3f(0, size_y / 6, 2 * size_z / 3);                  // left-down
-        glVertex3f(5 * size_x / 6, size_y / 6, 2 * size_z / 3);     // right-down
-        glVertex3f(0, 5 * size_y / 6, 2 * size_z / 3);              // left-up
-        glVertex3f(5 * size_x / 6, 5 * size_y / 6, 2 * size_z / 3); // right-up
+        glVertex3f(0, cell_width / 8, cell_width / 2);                  // left-down
+        glVertex3f(7 * cell_width / 8, cell_width / 8, cell_width / 2);     // right-down
+        glVertex3f(7 * cell_width / 8, 7 * cell_width / 8, cell_width / 2); // right-up
+        glVertex3f(0, 7 * cell_width / 8, cell_width / 2);              // left-up
         glEnd();
 
-        /*Left*/
+        //Base
+        /*glColor3f(this->colors[0], this->colors[1], this->colors[2]); // getting the colors from the initial configuration
+        glBegin(GL_QUADS);
+        glVertex3f(0, cell_width / 8, 0);                  // left-down
+        glVertex3f(7 * cell_width / 8, cell_width / 8, 0);              // right-down
+        glVertex3f(7 * cell_width / 8, 7 * cell_width / 8, 0);     // right-up 
+        glVertex3f(0, 7 * cell_width / 8, 0); // left-up
+        glEnd();*/
+
+        //Left
         glColor3f(this->colors[0], this->colors[1], this->colors[2]);
         glBegin(GL_QUADS);
-        glVertex3f(0, size_y / 6, 0);                           // left-down
-        glVertex3f(0, size_y / 6, 2 * size_z / 3);              // left-up
-        glVertex3f(5 * size_x / 6, size_y / 6, 2 * size_z / 3); // right-up
-        glVertex3f(5 * size_x / 6, size_y / 6, 0);              // right-down
+        glVertex3f(0, cell_width / 8, 0); // left-down
+        glVertex3f(7 * cell_width / 8, cell_width / 8, 0); // right-down
+        glVertex3f(7 * cell_width / 8, cell_width / 8, cell_width / 2); // right-up
+        glVertex3f(0, cell_width / 8, cell_width / 2);              // left-up
         glEnd();
 
-        /*Right*/
+        //Right
         glColor3f(this->colors[0], this->colors[1], this->colors[2]);
         glBegin(GL_QUADS);
-        glVertex3f(0, 5 * size_y / 6, 0);
-        glVertex3f(5 * size_x / 6, 5 * size_y / 6, 0);
-        glVertex3f(5 * size_x / 6, 5 * size_y / 6, 2 * size_z / 3);
-        glVertex3f(0, 5 * size_y / 6, 2 * size_z / 3);
+        glVertex3f(0, 7 * cell_width / 8, 0); // left-down
+        glVertex3f(7 * cell_width / 8, 7 * cell_width / 8, 0); // right-down
+        glVertex3f(7 * cell_width / 8, 7 * cell_width / 8, cell_width / 2); // right-up
+        glVertex3f(0, 7 * cell_width / 8, cell_width / 2); // left-up
         glEnd();
 
-        /*Front*/
+        //Front
         glColor3f(this->colors[0], this->colors[1], this->colors[2]);
         glBegin(GL_QUADS);
-        glVertex3f(5 * size_x / 6, size_y / 6, 0);
-        glVertex3f(5 * size_x / 6, size_y / 6, 2 * size_z / 3);
-        glVertex3f(5 * size_x / 6, 5 * size_y / 6, 2 * size_z / 3);
-        glVertex3f(5 * size_x / 6, 5 * size_y / 6, 0);
+        glVertex3f(7 * cell_width / 8, cell_width / 8, 0); // left-down
+        glVertex3f(7 * cell_width / 8, 7 * cell_width / 8, 0); // right-down
+        glVertex3f(7 * cell_width / 8, 7 * cell_width / 8, cell_width/2); // right-up
+        glVertex3f(7 * cell_width / 8, cell_width / 8, cell_width/2); // left-up
         glEnd();
 
-        /*Back*/
+        //Back
         glColor3f(this->colors[0], this->colors[1], this->colors[2]);
         glBegin(GL_QUADS);
-        glVertex3f(0, size_y / 6, 0);
-        glVertex3f(0, 5 * size_y / 6, 0);
-        glVertex3f(0, 5 * size_y / 6, 2 * size_z / 3);
-        glVertex3f(0, size_y / 6, 2 * size_z / 3);
+        glVertex3f(0, 7 * cell_width / 8, 0); // left-down
+        glVertex3f(0, cell_width / 8, 0); // right-down
+        glVertex3f(0, cell_width / 8, cell_width/2); // right-up
+        glVertex3f(0, 7 * cell_width / 8, cell_width/2); // left-up
+        glEnd();
+
+        // the base is not necessary to be drawn
+        // but in any case, would be the same as the roof but nulling to zero the z component
+    }
+
+    void drawCavin(int cell_width)
+    {
+        // Roof
+        glColor3f(this->colors[0], this->colors[1], this->colors[2]);
+        //glColor3f(0, 0, 0);
+        glBegin(GL_QUADS);
+        glVertex3f(0, cell_width / 8, cell_width); // left-down
+        glVertex3f(2 * cell_width / 3, cell_width / 8, cell_width); // right-down
+        glVertex3f(2 * cell_width / 3, 7 * cell_width / 8, cell_width); // right-up
+        glVertex3f(0, 7 * cell_width / 8, cell_width); // left-up
+        glEnd();
+
+        // Left
+        glColor3f(this->colors[0], this->colors[1], this->colors[2]);
+        //glColor3f(0, 0, 0);
+        glBegin(GL_QUADS);
+        glVertex3f(0, cell_width / 8, cell_width/2); // left-down
+        glVertex3f(2 * cell_width / 3, cell_width / 8, cell_width/2); // right-down
+        glVertex3f(2 * cell_width / 3, cell_width / 8, cell_width); // right-up
+        glVertex3f(0, cell_width / 8, cell_width); // left-up
+        glEnd();
+
+        // Right
+        glColor3f(this->colors[0], this->colors[1], this->colors[2]);
+        //glColor3f(0, 0, 0);
+        glBegin(GL_QUADS);
+        glVertex3f(0, 7 * cell_width / 8, cell_width/2); // left-down
+        glVertex3f(2 * cell_width / 3, 7 * cell_width / 8, cell_width/2); // right-down
+        glVertex3f(2 * cell_width / 3, 7 * cell_width / 8, cell_width); // right-up
+        glVertex3f(0, 7 * cell_width / 8, cell_width); // left-up
+        glEnd();
+
+        // Front
+        glColor3f(this->colors[0], this->colors[1], this->colors[2]);
+        //glColor3f(0, 0, 0);
+        glBegin(GL_QUADS);
+        glVertex3f(2 * cell_width / 3, cell_width / 8, cell_width/2); // left-down
+        glVertex3f(2 *cell_width / 3, 7 * cell_width / 8, cell_width/2); // right-down
+        glVertex3f(2 * cell_width / 3, 7 * cell_width / 8, cell_width); // right-up
+        glVertex3f(2 * cell_width / 3, cell_width / 8, cell_width); // left-up
+        glEnd();
+
+        // Back
+        glColor3f(this->colors[0], this->colors[1], this->colors[2]);
+        //glColor3f(0, 0, 0);
+        glBegin(GL_QUADS);
+        glVertex3f(0, cell_width / 8, cell_width/2); // left-down
+        glVertex3f(0, 7 * cell_width / 8, cell_width/2); // right-down
+        glVertex3f(0, 7 * cell_width / 8, cell_width); // right-up
+        glVertex3f(0, cell_width / 8, cell_width); // left-up
         glEnd();
     }
 
-    void drawCavin(int size_x, int size_y, int size_z)
+    void drawCannon(int cell_width)
     {
-        /*Roof*/
-        glColor3f(this->colors[0], this->colors[1], this->colors[2]);
-        glBegin(GL_QUADS);
-        glVertex3f(0, size_y / 6, size_z);
-        glVertex3f(0, 5 * size_y / 6, size_z);
-        glVertex3f(size_x / 2, 5 * size_y / 6, size_z);
-        glVertex3f(size_x / 2, size_y / 6, size_z);
-        glEnd();
-
-        /*Left*/
-        glColor3f(this->colors[0], this->colors[1], this->colors[2]);
-        glBegin(GL_QUADS);
-        glVertex3f(0, size_y / 6, 2 * size_z / 3);
-        glVertex3f(0, size_y / 6, size_z);
-        glVertex3f(size_x / 2, size_y / 6, size_z);
-        glVertex3f(size_x / 2, size_y / 6, 2 * size_y / 3);
-        glEnd();
-
-        /*Right*/
-        glColor3f(this->colors[0], this->colors[1], this->colors[2]);
-        glBegin(GL_QUADS);
-        glVertex3f(0, 5 * size_y / 6, 2 * size_z / 3);
-        glVertex3f(size_x / 2, 5 * size_y / 6, 2 * size_z / 3);
-        glVertex3f(size_x / 2, 5 * size_y / 6, size_z);
-        glVertex3f(0, 5 * size_y / 6, size_z);
-        glEnd();
-
-        /*Front*/
-        glColor3f(this->colors[0], this->colors[1], this->colors[2]);
-        glBegin(GL_QUADS);
-        glVertex3f(size_x / 2, size_y / 6, 2 * size_z / 3);
-        glVertex3f(size_x / 2, size_y / 6, size_z);
-        glVertex3f(size_x / 2, 5 * size_y / 6, size_z);
-        glVertex3f(size_x / 2, 5 * size_y / 6, 2 * size_y / 3);
-        glEnd();
-
-        /*Back*/
-        glColor3f(this->colors[0], this->colors[1], this->colors[2]);
-        glBegin(GL_QUADS);
-        glVertex3f(0, size_y / 6, 2 * size_y / 3);
-        glVertex3f(0, 5 * size_y / 6, 2 * size_y / 3);
-        glVertex3f(0, 5 * size_y / 6, size_z);
-        glVertex3f(0, size_y / 6, size_z);
-        glEnd();
-    }
-
-    void drawCannon(int size_x, int size_y, int size_z)
-    {
-        float radius = (size_z / 12);
+        float radius = (cell_width / 12);
         GLUquadricObj *quadratic;
         glPushMatrix();
-        glTranslatef(size_x / 2, size_y / 2, 3 * size_z / 4 + (size_z / 4) / 2);
+        glTranslatef(cell_width / 2, cell_width / 2, 2 * cell_width / 3 + (cell_width / 4) / 2);
         glRotatef(90, 0, 1, 0);
         glColor3f(0, 0, 0);
         quadratic = gluNewQuadric();
-        gluCylinder(quadratic, radius, radius, size_x / 2, 32, 32);
+        gluCylinder(quadratic, radius, radius, 2 * cell_width/ 3, 32, 32);
         glEnd();
         glPopMatrix();
     }
 
+    /**
+    * Method which enables us to treat with states but also,
+    * with degrees when a translation or a rotation integration is needed
+    */
     int getDegree(int value)
     {
         int degree = 0;
@@ -301,7 +322,7 @@ public:
         {
             currentDegree = getDegree(dest_orientation);
             orientation = dest_orientation;
-            status = MOVE;
+            status = MOVE; // after rotation, starts the movement
         }
         else if (status == MOVE && t < this->time_remaining)
         {
@@ -330,31 +351,29 @@ public:
         this->dest_y = destination_y;
 
         // ROTATION
-        if (this->orientation != dest_orientation)
+        if (this->orientation != dest_orientation) // must the character rotate to move forward? if so, first rotation, then movement
         {
-
-            int dest_degree = getDegree(dest_orientation);
+            int dest_degree = getDegree(dest_orientation); // from states to degrees to integrate
             int currentDegree = getDegree(orientation);
 
             int diff = dest_degree - currentDegree;
 
-            if (abs(diff) == 270)
+            // positive or negative rotation? 
+            if (abs(diff) == 270) // if so, only needed 90 degrees to integrate, but what is the sign?
             {
-                if (diff >= 0)
-                {
+                if (diff >= 0) {
                     diff = -90;
                 }
-                else
-                {
+                else {
                     diff = 90;
                 }
             }
 
-            v_angular = diff / duration;
+            v_angular = diff / duration; // velocity for integration, called angular as usual
             status = ROTATE;
 
-            this->time_remaining_rotation = duration;
-            this->dest_orientation = dest_orientation;
+            this->time_remaining_rotation = duration; // same duration
+            this->dest_orientation = dest_orientation; // to check when accomplished
         }
     }
 };

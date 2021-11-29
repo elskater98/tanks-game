@@ -9,9 +9,11 @@
 // Libraries
 #include <iostream>
 #include <cmath>
+#include <GL/glut.h>
 #include <random>
 #include <algorithm> // std::random_shuffle
 #include <vector>
+//#include "textures.c++"
 
 // namespace
 using namespace std;
@@ -27,32 +29,20 @@ using namespace std;
 class Map
 {
 public:
-    int width, height;
+    int width, height, cell_width;
     char *array2D; // https://stackoverflow.com/questions/936687/how-do-i-declare-a-2d-array-in-c-using-new
 
     // initMap
-    void create(int width, int height)
+    void create(int width, int height, int cell_width)
     {
         this->width = width;
         this->height = height;
+        this->cell_width = cell_width;
         array2D = new char[(int)width * (int)height];
 
         initWalls();
         recursiveAlgorithm(1, 1);
         removeMazeWalls();
-    }
-
-    void print()
-    {
-        cout << "Rows:" << width << " Columns:" << height << "\n\n";
-        for (int i = 0; i < width; i++)
-        {
-            for (int j = 0; j < height; j++)
-            {
-                cout << array2D[getPosition(i, j)] << " "; // horizontal Print
-            }
-            cout << "\n";
-        }
     }
 
     int getPosition(int x, int y)
@@ -71,7 +61,74 @@ public:
         return CORRIDOR_SYMBOL;
     }
 
-    // private class methods
+    void print()
+    {
+        cout << "Rows:" << width << " Columns:" << height << "\n\n";
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                cout << array2D[getPosition(i, j)] << " "; // horizontal Print
+            }
+            cout << "\n";
+        }
+    }
+
+    // GL/glut display
+    void display()
+    {
+        // Function that loops over map and display each place
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (array2D[getPosition(x, y)] == getWallSymbol())
+                {
+                    displayWall(x, y);
+                }
+                else if (array2D[getPosition(x, y)] == getCorridorSymbol())
+                {
+                    if (x == 1 && y == height - 2)
+                    {
+                        displayInitialPlayer(x, y);
+                    }
+                    else if (x == width - 2 && y == 1)
+                    {
+                        displayInitialEnemy(x, y);
+                    }
+                    else
+                    {
+                        displayCorridor(x, y);
+                    }
+                }
+            }
+        }
+    }
+
+    /*void loadGameTextures()
+    {
+        //wall
+        glBindTexture(GL_TEXTURE_2D, 0);
+        TexturesUtils::loadTexture((char *)"textures/wall.jpg", 64);
+
+        // roof
+        glBindTexture(GL_TEXTURE_2D, 1);
+        TexturesUtils::loadTexture((char *)"textures/roof.jpg", 64);
+
+        // path
+        glBindTexture(GL_TEXTURE_2D, 2);
+        TexturesUtils::loadTexture((char *)"textures/floor.jpg", 64);
+
+        // water
+        glBindTexture(GL_TEXTURE_2D, 3);
+        TexturesUtils::loadTexture((char *)"textures/water.jpg", 64);
+
+        // path
+        glBindTexture(GL_TEXTURE_2D, 4);
+        TexturesUtils::loadTexture((char *)"textures/lava.jpg", 64);
+    }*/
+
+// private class methods
 private:
     char WALL_SYMBOL = '#';
     char CORRIDOR_SYMBOL = ' ';
@@ -276,5 +333,147 @@ private:
                 }
             }
         }
+    }
+
+    void displayWall(int x, int y)
+    {
+        // Function that represents the walls
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 2);
+        glBegin(GL_QUADS);
+        glTexCoord2f(-0.25, 0.0);
+        glVertex3i(x * (cell_width), y * (cell_width), cell_width);
+        glTexCoord2f(0.25, 0.0);
+        glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
+        glTexCoord2f(0.25, 0.25);
+        glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
+        glTexCoord2f(-0.25, 0.25);
+        glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
+
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBegin(GL_QUADS);
+        glTexCoord2f(-1.0, 0.0);
+        glVertex3i(x * (cell_width), y * (cell_width), 0);
+        glTexCoord2f(1.0, 0.0);
+        glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+        glTexCoord2f(1.0, 1.0);
+        glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+        glTexCoord2f(-1.0, 1.0);
+        glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
+
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBegin(GL_QUADS);
+        glTexCoord2f(-1.0, 0.0);
+        glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+        glTexCoord2f(1.0, 0.0);
+        glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+        glTexCoord2f(1.0, 1.0);
+        glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
+        glTexCoord2f(-1.0, 1.0);
+        glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
+
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBegin(GL_QUADS);
+        glTexCoord2f(-1.0, 0.0);
+        glVertex3i(x * (cell_width), y * (cell_width), 0);
+        glTexCoord2f(1.0, 0.0);
+        glVertex3i(x * (cell_width) + cell_width, y * (cell_width), 0);
+        glTexCoord2f(1.0, 1.0);
+        glVertex3i(x * (cell_width) + cell_width, y * (cell_width), cell_width);
+        glTexCoord2f(-1.0, 1.0);
+        glVertex3i(x * (cell_width), y * (cell_width), cell_width);
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
+
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBegin(GL_QUADS);
+        glTexCoord2f(-1.0, 0.0);
+        glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+        glTexCoord2f(1.0, 0.0);
+        glVertex3i(x * (cell_width), y * (cell_width), 0);
+        glTexCoord2f(1.0, 1.0);
+        glVertex3i(x * (cell_width), y * (cell_width), cell_width);
+        glTexCoord2f(-1.0, 1.0);
+        glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
+
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBegin(GL_QUADS);
+        glTexCoord2f(1.0, 0.0);
+        glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, 0);
+        glTexCoord2f(-1.0, 0.0);
+        glVertex3i(x * (cell_width), y * (cell_width) + cell_width, 0);
+        glTexCoord2f(-0.5, 0.5);
+        glVertex3i(x * (cell_width), y * (cell_width) + cell_width, cell_width);
+        glTexCoord2f(0.5, 0.5);
+        glVertex3i(x * (cell_width) + cell_width, y * (cell_width) + cell_width, cell_width);
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
+    }
+
+    void displayCorridor(int x, int y)
+    {
+        // Function that represents the corrider as floor
+        glBindTexture(GL_TEXTURE_2D, 1);
+        glEnable(GL_TEXTURE_2D);
+        glBegin(GL_QUADS);
+        glTexCoord2f(-0.5, 0.0);
+        glVertex2i(x * (cell_width), y * (cell_width));
+        glTexCoord2f(0.5, 0.0);
+        glVertex2i(x * (cell_width) + cell_width, y * (cell_width));
+        glTexCoord2f(0.5, 0.5);
+        glVertex2i(x * (cell_width) + cell_width, y * (cell_width) + cell_width);
+        glTexCoord2f(-0.5, 0.5);
+        glVertex2i(x * (cell_width), y * (cell_width) + cell_width);
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
+    }
+
+    void displayInitialPlayer(int x, int y)
+    {
+        // Function that represents the initial point of the player
+        glBindTexture(GL_TEXTURE_2D, 3);
+        glEnable(GL_TEXTURE_2D);
+        glBegin(GL_QUADS);
+        glTexCoord2f(-0.5, 0.0);
+        glVertex2i(x * (cell_width), y * (cell_width));
+        glTexCoord2f(0.5, 0.0);
+        glVertex2i(x * (cell_width) + cell_width, y * (cell_width));
+        glTexCoord2f(0.5, 0.5);
+        glVertex2i(x * (cell_width) + cell_width, y * (cell_width) + cell_width);
+        glTexCoord2f(-0.5, 0.5);
+        glVertex2i(x * (cell_width), y * (cell_width) + cell_width);
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
+    }
+
+    void displayInitialEnemy(int x, int y)
+    {
+        // Function that represents the initial point of the enemy
+        glBindTexture(GL_TEXTURE_2D, 4);
+        glEnable(GL_TEXTURE_2D);
+        glBegin(GL_QUADS);
+        glTexCoord2f(-0.5, 0.0);
+        glVertex2i(x * (cell_width), y * (cell_width));
+        glTexCoord2f(0.5, 0.0);
+        glVertex2i(x * (cell_width) + cell_width, y * (cell_width));
+        glTexCoord2f(0.5, 0.5);
+        glVertex2i(x * (cell_width) + cell_width, y * (cell_width) + cell_width);
+        glTexCoord2f(-0.5, 0.5);
+        glVertex2i(x * (cell_width), y * (cell_width) + cell_width);
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
     }
 };
