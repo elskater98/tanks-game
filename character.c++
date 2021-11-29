@@ -115,22 +115,6 @@ public:
         GLfloat diffuseLight[4] = {0.1, 0.1, 0.1, 1};/*{0.8f, 0.8f, 0.8f, 1.0f};*/
         GLfloat specularLight[4] = {0.5f, 0.5f, 0.5f, 1.0f};
 
-        /*spot_position[4] = {x, y, MAP_CELL_WIDTH, 1};
-        /*spot_position[0] = x;
-        spot_position[1] = y;
-        spot_position[2] = MAP_CELL_WIDTH;
-        spot_position[3] = 1;*/
-        /*spot_color[4] = {0.8, 0.8, 0.8, 1};
-        /*spot_color[0] = 0.8;
-        spot_color[1] = 0.8;
-        spot_color[2] = 0.8;
-        spot_color[3] = 1;*/
-        /*diffuseLight[4] = {0.1, 0.1, 0.1, 1};
-        /*diffuseLight[0] = 0.1;
-        diffuseLight[1] = 0.1;
-        diffuseLight[2] = 0.1;
-        diffuseLight[3] = 1;*/
-
         // Spotlight (player)
         if (this->id == 0)
         {
