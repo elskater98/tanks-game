@@ -17,11 +17,12 @@ we can modify the position thorught the *glutLookAt* procedure.
 
 ### Task 2. Represent the characters as tanks
 
-Regarding the tanks, we decided to make it though our own way.
-So we build, them based on two orthogonal polygons, the first, which is the biggets, representing the base.
-And the second, the canyon which remarks the tank direction.
+Regarding the tanks, we decided to make it through our own way.
+So we build, them based on two orthogonal polygons, the first, which is the biggest, representing the base.
+And the second, the turret, which remarks the tank direction by the canyon.
 
-We expect to complete a better drawing if we finally get time left.
+Moreover, we implemented the turning moving adding direction/orientation variables to the characters, and a new state *ROTATE*.
+The one enables integrating the movement of rotation.
 
 ### Task 3. Print text to the screen
 
