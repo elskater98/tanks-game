@@ -9,6 +9,7 @@
 #include <jpeglib.h>
 
 // Own Libraries
+#include "material.c++"
 #include "map.c++"
 #include "character.c++"
 
@@ -48,6 +49,9 @@ auto start = std::chrono::system_clock::now();
 float maxTimeLeft = 200.0; // seconds
 
 bool DEBUG = false;
+
+// Global material properties
+LightMaterial lightMaterial;
 
 void printTimeLeft()
 {
@@ -141,11 +145,6 @@ void PositionObserver(float alpha, float beta, int radi)
 
 void display()
 {
-    GLint position[4];
-    GLfloat color[4];
-    GLint spot_position[4];
-    GLfloat spot_color[4];
-
     glClearColor(0.0, 0.0, 0.0, 0.0); // black background
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -165,25 +164,23 @@ void display()
     glPolygonMode(GL_FRONT, GL_FILL);
     glPolygonMode(GL_BACK, GL_FILL);
 
+    // enabling lighting mode
     glEnable(GL_LIGHTING);
 
     // Ambient light configuration
-    position[0] = 0;
-    position[1] = 0;
-    position[2] = 0;
-    position[3] = 0;
+    GLint position[4] = {0, 0, 0, 0};
+    GLfloat color[4] = {0.2f, 0.2f, 0.2f, 1.0f};
+ 
     glLightiv(GL_LIGHT0, GL_POSITION, position);
-
-    color[0] = 0.2f;
-    color[1] = 0.2f;
-    color[2] = 0.2f;
-    color[3] = 1.0f;
     GLfloat diffuseLight[] = {0.8f, 0.8f, 0.8f, 1.0f};
     GLfloat specularLight[] = {0.5f, 0.5f, 0.5f, 1.0f};
     glLightfv(GL_LIGHT0, GL_AMBIENT, color);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
     glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
     glEnable(GL_LIGHT0);
+
+    // Ambient light configuration by material
+    lightMaterial.apply();
 
     // Display map
     map.display();
@@ -192,8 +189,9 @@ void display()
     player.display();
     enemy.display();
 
+    glDisable(GL_LIGHTING); // disabling lighting mode
+
     // Time HUD
-    glDisable(GL_LIGHTING);
     printTimeLeft();
 
     glutSwapBuffers();
@@ -494,7 +492,6 @@ int main(int argc, char *argv[])
     glEnable(GL_NORMALIZE);
     glEnable(GL_COLOR_MATERIAL);
 
-
     // Display
     glutDisplayFunc(display);
 
@@ -505,7 +502,6 @@ int main(int argc, char *argv[])
     glutIdleFunc(idle);
 
     //Load Textures
-    //map.loadGameTextures();
     loadGameTextures();
 
     glutMainLoop();

@@ -104,30 +104,7 @@ public:
             }
         }
     }
-
-    /*void loadGameTextures()
-    {
-        //wall
-        glBindTexture(GL_TEXTURE_2D, 0);
-        TexturesUtils::loadTexture((char *)"textures/wall.jpg", 64);
-
-        // roof
-        glBindTexture(GL_TEXTURE_2D, 1);
-        TexturesUtils::loadTexture((char *)"textures/roof.jpg", 64);
-
-        // path
-        glBindTexture(GL_TEXTURE_2D, 2);
-        TexturesUtils::loadTexture((char *)"textures/floor.jpg", 64);
-
-        // water
-        glBindTexture(GL_TEXTURE_2D, 3);
-        TexturesUtils::loadTexture((char *)"textures/water.jpg", 64);
-
-        // path
-        glBindTexture(GL_TEXTURE_2D, 4);
-        TexturesUtils::loadTexture((char *)"textures/lava.jpg", 64);
-    }*/
-
+    
 // private class methods
 private:
     char WALL_SYMBOL = '#';
